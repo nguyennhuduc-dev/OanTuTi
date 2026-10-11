@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Game Oẳn Tù Tì</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="game">
+
+        <h1>🎮 GAME OẲN TÙ TÌ</h1>
+
+        <h2>ĐẤU BO3</h2>
+
+        <div class="score">
+            <div>
+                <h3>👤 BẠN</h3>
+                <p id="playerScore">0</p>
+            </div>
+
+            <div>
+                <h3>🤖 MÁY</h3>
+                <p id="computerScore">0</p>
+            </div>
+        </div>
+
+        <div class="result">
+            <p id="computerChoice">
+                🤖 Máy chưa chọn
+            </p>
+
+            <h2 id="resultText">
+                Hãy chọn một lựa chọn!
+            </h2>
+        </div>
+
+        <div class="choices">
+
+            <button onclick="play('búa')">
+                ✊
+                <span>BÚA</span>
+            </button>
+
+            <button onclick="play('kéo')">
+                ✌️
+                <span>KÉO</span>
+            </button>
+
+            <button onclick="play('bao')">
+                🖐️
+                <span>BAO</span>
+            </button>
+
+        </div>
+
+        <button
+            class="reset"
+            onclick="resetGame()">
+            🔄 CHƠI LẠI
+        </button>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, sans-serif;
+
+    background: #111827;
+    color: white;
+}
+
+.game {
+    width: 90%;
+    max-width: 600px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    background: #1f2937;
+
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+h2 {
+    margin-top: 10px;
+}
+
+.score {
+    display: flex;
+
+    justify-content: space-around;
+
+    margin: 30px 0;
+}
+
+.score div {
+    width: 40%;
+
+    padding: 15px;
+
+    background: #374151;
+
+    border-radius: 15px;
+}
+
+.score p {
+    font-size: 40px;
+    font-weight: bold;
+
+    margin: 10px;
+}
+
+.result {
+    min-height: 120px;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+
+    background: #111827;
+
+    border-radius: 15px;
+}
+
+.choices {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+}
+
+.choices button {
+    width: 120px;
+    height: 120px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: #4b5563;
+
+    color: white;
+
+    font-size: 40px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.choices button:hover {
+    transform: translateY(-5px);
+
+    background: #6b7280;
+}
+
+.choices span {
+    display: block;
+
+    font-size: 16px;
+
+    margin-top: 10px;
+}
+
+.reset {
+    margin-top: 25px;
+
+    padding: 12px 30px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+.reset:hover {
+    background: #1d4ed8;
+}
+
+@media (max-width: 500px) {
+
+    .game {
+        padding: 20px;
+    }
+
+    .choices {
+        gap: 8px;
+    }
+
+    .choices button {
+        width: 90px;
+        height: 90px;
+
+        font-size: 30px;
+    }
+
+}
