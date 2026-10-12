@@ -3,7 +3,7 @@
 :root {
   --bg: #090d1b;
   --panel: #11182d;
-  --line: rgba(164, 177, 255, 0.14);
+  --line: rgba(164, 177, 255, 0.15);
   --text: #f4f6ff;
   --muted: #8d99b8;
   --purple: #a78bfa;
@@ -55,7 +55,7 @@ select:focus-visible {
   height: 350px;
   border-radius: 50%;
   filter: blur(110px);
-  opacity: 0.14;
+  opacity: .14;
   pointer-events: none;
 }
 
@@ -76,6 +76,8 @@ select:focus-visible {
   margin: 0 auto;
   padding: 24px 0 28px;
 }
+
+/* HEADER */
 
 .topbar {
   display: flex;
@@ -105,14 +107,14 @@ select:focus-visible {
   font-size: 24px;
 }
 
-.brand-copy strong {
+.brand strong {
   display: block;
   font-size: 14px;
   font-weight: 900;
   letter-spacing: 1.5px;
 }
 
-.brand-copy small {
+.brand small {
   display: block;
   margin-top: 4px;
   color: var(--muted);
@@ -124,6 +126,10 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 8px;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
 .live-dot,
@@ -137,13 +143,6 @@ select:focus-visible {
   box-shadow: 0 0 12px #4adea288;
 }
 
-.status-label {
-  color: var(--green);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
 .icon-button {
   display: grid;
   place-items: center;
@@ -155,24 +154,21 @@ select:focus-visible {
   color: white;
   background: #ffffff08;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.icon-button:hover {
-  border-color: #a78bfa88;
-  background: #a78bfa15;
-}
+/* HERO */
 
 .hero {
   margin: 0 auto 34px;
   text-align: center;
 }
 
-.eyebrow {
+.eyebrow,
+.section-kicker {
   color: var(--purple);
   font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 3px;
+  font-weight: 900;
+  letter-spacing: 2px;
 }
 
 .hero h1 {
@@ -197,6 +193,8 @@ select:focus-visible {
   line-height: 1.8;
 }
 
+/* PANEL */
+
 .panel {
   border: 1px solid var(--line);
   border-radius: 26px;
@@ -219,7 +217,7 @@ select:focus-visible {
   left: 35%;
   background: #8b5cf6;
   filter: blur(95px);
-  opacity: 0.3;
+  opacity: .3;
   pointer-events: none;
 }
 
@@ -232,19 +230,11 @@ select:focus-visible {
   gap: 12px;
 }
 
-.section-kicker {
-  color: var(--purple);
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 2px;
-}
-
 .panel-heading h2,
 .section-title-row h2 {
   margin: 5px 0 0;
   font-size: 19px;
   font-weight: 800;
-  letter-spacing: -0.4px;
 }
 
 .round-pill {
@@ -260,6 +250,8 @@ select:focus-visible {
 .round-pill strong {
   color: var(--text);
 }
+
+/* SETTINGS */
 
 .settings-row {
   display: flex;
@@ -287,13 +279,14 @@ select:focus-visible {
   background: #0d1428;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0;
   cursor: pointer;
 }
 
 .setting-control option {
   background: #0d1428;
 }
+
+/* SCOREBOARD */
 
 .scoreboard {
   display: grid;
@@ -317,13 +310,6 @@ select:focus-visible {
   letter-spacing: 1.2px;
 }
 
-.contestant-label small {
-  color: var(--muted);
-  font-size: 8px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-}
-
 .player-dot {
   background: var(--purple);
   box-shadow: 0 0 10px #a78bfa88;
@@ -343,7 +329,6 @@ select:focus-visible {
   border: 1px solid #a78bfa45;
   border-radius: 28px;
   background: linear-gradient(145deg, #8b5cf61a, #3b82f612);
-  box-shadow: inset 0 0 28px #8b5cf60b;
 }
 
 .cpu-frame {
@@ -358,14 +343,13 @@ select:focus-visible {
 }
 
 .hand.animate {
-  animation: handReveal 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: handReveal .42s ease;
 }
 
 .versus {
   display: grid;
-  justify-items: center;
-  gap: 5px;
-  color: #5f6a8a;
+  place-items: center;
+  color: #7e89a9;
   font-size: 17px;
   font-weight: 900;
 }
@@ -378,13 +362,6 @@ select:focus-visible {
   border: 1px solid var(--line);
   border-radius: 50%;
   background: #ffffff05;
-}
-
-.versus small {
-  font-size: 7px;
-  line-height: 1.5;
-  text-align: center;
-  letter-spacing: 1px;
 }
 
 .score {
@@ -407,6 +384,8 @@ select:focus-visible {
   letter-spacing: 1.5px;
 }
 
+/* PROGRESS */
+
 .progress-wrap {
   margin: 24px 0 17px;
 }
@@ -419,7 +398,6 @@ select:focus-visible {
   color: var(--muted);
   font-size: 9px;
   font-weight: 800;
-  letter-spacing: 0.8px;
 }
 
 .progress-label span:last-child {
@@ -438,9 +416,10 @@ select:focus-visible {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, #a78bfa, #60a5fa);
-  box-shadow: 0 0 12px #8b5cf655;
-  transition: width 0.35s ease;
+  transition: width .35s ease;
 }
+
+/* RESULT */
 
 .result-box {
   display: flex;
@@ -451,7 +430,6 @@ select:focus-visible {
   border: 1px solid var(--line);
   border-radius: 16px;
   background: #080d1d70;
-  transition: 0.25s;
 }
 
 .result-symbol {
@@ -481,23 +459,17 @@ select:focus-visible {
   background: #4adea20c;
 }
 
-.result-box.win .result-symbol {
-  background: #4adea21a;
-}
-
 .result-box.lose {
   border-color: #fb718555;
   background: #fb71850c;
-}
-
-.result-box.lose .result-symbol {
-  background: #fb71851a;
 }
 
 .result-box.draw {
   border-color: #60a5fa55;
   background: #60a5fa0c;
 }
+
+/* CHOICES */
 
 .choices-heading {
   display: flex;
@@ -536,7 +508,7 @@ select:focus-visible {
   color: var(--text);
   background: linear-gradient(145deg, #ffffff08, #ffffff02);
   cursor: pointer;
-  transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  transition: transform .2s, border-color .2s, background .2s;
 }
 
 .choice:hover:not(:disabled) {
@@ -546,11 +518,11 @@ select:focus-visible {
 }
 
 .choice:active:not(:disabled) {
-  transform: scale(0.97);
+  transform: scale(.97);
 }
 
 .choice:disabled {
-  opacity: 0.4;
+  opacity: .4;
   cursor: not-allowed;
 }
 
@@ -585,6 +557,8 @@ select:focus-visible {
   font-size: 9px;
 }
 
+/* BUTTONS */
+
 .game-actions {
   display: flex;
   justify-content: center;
@@ -603,9 +577,8 @@ select:focus-visible {
   background: #ffffff07;
   font-size: 10px;
   font-weight: 900;
-  letter-spacing: 0.6px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: .2s;
 }
 
 .button:hover {
@@ -616,11 +589,6 @@ select:focus-visible {
 .button-primary {
   border-color: transparent;
   background: linear-gradient(100deg, #8b5cf6, #477cf2);
-  box-shadow: 0 7px 22px #6d5be52b;
-}
-
-.button-primary:hover {
-  background: linear-gradient(100deg, #9b70ff, #6190ff);
 }
 
 .button-quiet {
@@ -634,6 +602,8 @@ select:focus-visible {
   font-size: 9px;
 }
 
+/* STATISTICS */
+
 .stats-section {
   margin-top: 35px;
 }
@@ -646,7 +616,6 @@ select:focus-visible {
   color: var(--green);
   font-size: 8px;
   font-weight: 800;
-  letter-spacing: 1px;
   white-space: nowrap;
 }
 
@@ -703,7 +672,6 @@ select:focus-visible {
   color: var(--muted);
   font-size: 8px;
   font-weight: 800;
-  letter-spacing: 0.5px;
   line-height: 1.5;
 }
 
@@ -719,6 +687,8 @@ select:focus-visible {
   font-size: 9px;
   line-height: 1.5;
 }
+
+/* HISTORY */
 
 .history-section {
   margin-top: 22px;
@@ -790,10 +760,8 @@ select:focus-visible {
 }
 
 .history-score {
-  color: var(--text);
   font-size: 12px;
   font-weight: 900;
-  font-variant-numeric: tabular-nums;
 }
 
 .empty-history {
@@ -802,6 +770,8 @@ select:focus-visible {
   text-align: center;
   font-size: 11px;
 }
+
+/* FOOTER */
 
 footer {
   display: flex;
@@ -829,6 +799,7 @@ footer {
   border-radius: 6px;
 }
 
+/* ANIMATIONS */
 
 #celebration {
   position: fixed;
@@ -849,8 +820,8 @@ footer {
 
 @keyframes handReveal {
   0% {
-    transform: scale(0.65) rotate(-12deg);
-    opacity: 0.35;
+    transform: scale(.65) rotate(-12deg);
+    opacity: .35;
   }
   65% {
     transform: scale(1.12) rotate(4deg);
@@ -867,6 +838,8 @@ footer {
     opacity: 0;
   }
 }
+
+/* RESPONSIVE */
 
 @media (max-width: 650px) {
   .app-shell {
@@ -920,16 +893,16 @@ footer {
     width: calc(100% - 18px);
   }
 
-  .brand-copy strong {
+  .brand strong {
     font-size: 12px;
   }
 
-  .brand-copy small {
+  .brand small {
     font-size: 8px;
     letter-spacing: 1px;
   }
 
-  .status-label {
+  .topbar-right {
     font-size: 8px;
   }
 
@@ -945,11 +918,7 @@ footer {
   .contestant-label {
     gap: 4px;
     font-size: 9px;
-    letter-spacing: 0.4px;
-  }
-
-  .contestant-label small {
-    display: none;
+    letter-spacing: .4px;
   }
 
   .hand-frame {
@@ -990,14 +959,13 @@ footer {
   }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
+    animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: .01ms !important;
   }
 }
