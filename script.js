@@ -1,693 +1,1571 @@
-"use strict";
+// ============================================
+// OẲN TÙ TÌ CAPA
+// ============================================
 
-// ========================================
-// 1. CẤU HÌNH VÀ DỮ LIỆU
-// ========================================
 
-const $ = (selector) => document.querySelector(selector);
+// ===============================
+// SHORTCUT
+// ===============================
 
-const choices = {
-  rock: { label: "Búa", emoji: "✊" },
-  paper: { label: "Bao", emoji: "✋" },
-  scissors: { label: "Kéo", emoji: "✌️" }
+const $ = (id) => document.getElementById(id);
+
+
+// ===============================
+// GAME DATA
+// ===============================
+
+const icons = {
+
+    rock: "✊",
+
+    paper: "✋",
+
+    scissors: "✌️"
+
 };
 
-// Búa thắng Kéo, Bao thắng Búa, Kéo thắng Bao
+
+const names = {
+
+    rock: "Búa",
+
+    paper: "Bao",
+
+    scissors: "Kéo"
+
+};
+
+
+// Nước nào thắng nước nào
+
 const beats = {
-  rock: "scissors",
-  paper: "rock",
-  scissors: "paper"
+
+    rock: "scissors",
+
+    paper: "rock",
+
+    scissors: "paper"
+
 };
 
-const STORAGE_KEY = "neonArenaStatsV21";
+
+// ===============================
+// DEFAULT PLAYER DATA
+// ===============================
+
+const defaultData = {
+
+    xp: 0,
+
+    level: 1,
+
+    wins: 0,
+
+    losses: 0,
+
+    draws: 0,
+
+    streak: 0,
+
+    bestStreak: 0,
+
+    history: [],
+
+    moves: [],
+
+    achievements: {}
+
+};
+
+
+// ===============================
+// LOAD DATA
+// ===============================
+
+let data = loadData();
+
+
+// ===============================
+// CURRENT MATCH
+// ===============================
 
 let playerScore = 0;
+
 let cpuScore = 0;
+
 let round = 1;
-let finished = false;
-let soundEnabled = false;
-let audioContext = null;
-let moveHistory = [];
-let stats = loadStats();
 
-// ========================================
-// 2. THỐNG KÊ VÀ LOCAL STORAGE
-// ========================================
+let locked = false;
 
-function defaultStats() {
-  return {
-    wins: 0,
-    losses: 0,
-    bestStreak: 0,
-    currentStreak: 0,
-    history: []
-  };
-}
 
-function loadStats() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
+// ===============================
+// LOCAL STORAGE
+// ===============================
 
-    if (saved) {
-      const data = JSON.parse(saved);
+function loadData() {
 
-      return {
-        ...defaultStats(),
-        ...data,
-        history: Array.isArray(data.history)
-          ? data.history
-          : []
-      };
-    }
-  } catch (error) {
-    console.error("Lỗi tải thống kê:", error);
-  }
+    try {
 
-  return defaultStats();
-}
+        const saved =
+            localStorage.getItem(
+                "oanTuTiCAPA"
+            );
 
-function saveStats() {
-  try {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(stats)
-    );
-  } catch (error) {
-    console.error("Lỗi lưu thống kê:", error);
-  }
-}
+        if (!saved) {
 
-// ========================================
-// 3. KIỂM TRA CÁC PHẦN TỬ HTML
-// ========================================
+            return {
+                ...defaultData
+            };
 
-function checkHTML() {
-  const requiredIds = [
-    "playerScore",
-    "cpuScore",
-    "roundNumber",
-    "progressText",
-    "progressBar",
-    "playerHand",
-    "cpuHand",
-    "resultBox",
-    "resultSymbol",
-    "resultTitle",
-    "resultDetail",
-    "modeSelect",
-    "difficultySelect",
-    "statusLabel",
-    "wins",
-    "losses",
-    "winRate",
-    "bestStreak",
-    "historyList"
-  ];
+        }
 
-  const missing = requiredIds.filter(
-    (id) => !document.getElementById(id)
-  );
+        return {
 
-  if (missing.length > 0) {
-    console.error(
-      "Không tìm thấy các ID trong HTML:",
-      missing.join(", ")
-    );
+            ...defaultData,
 
-    return false;
-  }
+            ...JSON.parse(saved)
 
-  return true;
-}
+        };
 
-// ========================================
-// 4. CẬP NHẬT ĐIỂM
-// ========================================
-
-function getTargetScore() {
-  return Number($("#modeSelect").value) === 5 ? 3 : 2;
-}
-
-function updateBoard() {
-  // Cập nhật điểm ngay sau mỗi ván
-  $("#playerScore").textContent = String(playerScore);
-  $("#cpuScore").textContent = String(cpuScore);
-  $("#roundNumber").textContent = String(round);
-
-  const target = getTargetScore();
-  const progress = Math.max(playerScore, cpuScore);
-
-  $("#progressText").textContent =
-    `${progress} / ${target} điểm`;
-
-  $("#progressBar").style.width =
-    `${Math.min(100, (progress / target) * 100)}%`;
-}
-
-// ========================================
-// 5. HIỂN THỊ KẾT QUẢ
-// ========================================
-
-function setResult(kind, symbol, title, detail) {
-  const box = $("#resultBox");
-
-  box.className = kind
-    ? `result-box ${kind}`
-    : "result-box";
-
-  $("#resultSymbol").textContent = symbol;
-  $("#resultTitle").textContent = title;
-  $("#resultDetail").textContent = detail;
-}
-
-function animateHands() {
-  [$("#playerHand"), $("#cpuHand")].forEach((element) => {
-    element.classList.remove("animate");
-
-    // Kích hoạt lại animation
-    void element.offsetWidth;
-
-    element.classList.add("animate");
-  });
-}
-
-// ========================================
-// 6. MÁY TÍNH CHỌN NƯỚC ĐI
-// ========================================
-
-function randomChoice() {
-  const keys = Object.keys(choices);
-
-  return keys[Math.floor(Math.random() * keys.length)];
-}
-
-function pickCpuChoice() {
-  const difficulty = $("#difficultySelect").value;
-
-  // Dễ: hoàn toàn ngẫu nhiên
-  if (difficulty === "easy" || moveHistory.length === 0) {
-    return randomChoice();
-  }
-
-  // Thường: đôi lúc chọn ngẫu nhiên
-  if (difficulty === "normal" && Math.random() < 0.55) {
-    return randomChoice();
-  }
-
-  // Khó: phân tích lựa chọn người chơi đã dùng
-  const counts = {
-    rock: 0,
-    paper: 0,
-    scissors: 0
-  };
-
-  moveHistory.forEach((move) => {
-    counts[move]++;
-  });
-
-  const mostUsed = Object.keys(counts).reduce((a, b) =>
-    counts[a] >= counts[b] ? a : b
-  );
-
-  // Chọn lựa chọn thắng nước đi người chơi hay dùng nhất
-  const counter = Object.keys(beats).find(
-    (key) => beats[key] === mostUsed
-  );
-
-  if (
-    difficulty === "hard" ||
-    Math.random() < 0.65
-  ) {
-    return counter || randomChoice();
-  }
-
-  return randomChoice();
-}
-
-// ========================================
-// 7. ÂM THANH
-// ========================================
-
-function playSound(kind) {
-  if (!soundEnabled) return;
-
-  try {
-    const AudioContextClass =
-      window.AudioContext || window.webkitAudioContext;
-
-    if (!AudioContextClass) return;
-
-    audioContext = audioContext || new AudioContextClass();
-
-    if (audioContext.state === "suspended") {
-      audioContext.resume();
     }
 
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
+    catch {
 
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
+        return {
+            ...defaultData
+        };
 
-    oscillator.type = "sine";
+    }
 
-    oscillator.frequency.value =
-      kind === "win" ? 660 :
-      kind === "lose" ? 220 : 420;
-
-    gain.gain.setValueAtTime(
-      0.07,
-      audioContext.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      audioContext.currentTime + 0.18
-    );
-
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.18);
-  } catch (error) {
-    console.warn("Không thể phát âm thanh:", error);
-  }
 }
 
-// ========================================
-// 8. HIỆU ỨNG CHIẾN THẮNG
-// ========================================
 
-function celebrate() {
-  const container = $("#celebration");
-  const colors = [
-    "#a78bfa",
-    "#60a5fa",
-    "#4adea2",
-    "#facc75",
-    "#fb7185"
-  ];
+// ===============================
+// SAVE
+// ===============================
 
-  for (let i = 0; i < 65; i++) {
-    const piece = document.createElement("span");
+function save() {
 
-    piece.className = "confetti";
-    piece.style.left = `${Math.random() * 100}%`;
+    try {
 
-    piece.style.background =
-      colors[Math.floor(Math.random() * colors.length)];
+        localStorage.setItem(
 
-    piece.style.animationDelay =
-      `${Math.random() * 0.5}s`;
+            "oanTuTiCAPA",
 
-    piece.style.animationDuration =
-      `${1.3 + Math.random()}s`;
+            JSON.stringify(data)
 
-    container.appendChild(piece);
+        );
 
-    window.setTimeout(() => {
-      piece.remove();
-    }, 3000);
-  }
+    }
+
+    catch {
+
+        console.log(
+            "Không thể lưu dữ liệu."
+        );
+
+    }
+
 }
 
-// ========================================
-// 9. CHƠI MỘT VÁN
-// ========================================
 
-function playRound(playerChoice) {
-  // Không cho chơi nếu trận đã kết thúc
-  if (finished) return;
+// ===============================
+// XP
+// ===============================
 
-  // Kiểm tra lựa chọn hợp lệ
-  if (!Object.prototype.hasOwnProperty.call(choices, playerChoice)) {
-    console.error("Lựa chọn không hợp lệ:", playerChoice);
-    return;
-  }
+function xpNeeded() {
 
-  const cpuChoice = pickCpuChoice();
+    return 100 +
+        (data.level - 1) * 50;
 
-  // Lưu lựa chọn của người chơi để máy phân tích
-  moveHistory.push(playerChoice);
-
-  // Hiển thị hai lựa chọn
-  $("#playerHand").textContent = choices[playerChoice].emoji;
-  $("#cpuHand").textContent = choices[cpuChoice].emoji;
-
-  animateHands();
-
-  let result;
-
-  // So sánh lựa chọn và cộng điểm
-  if (playerChoice === cpuChoice) {
-    result = "draw";
-
-    setResult(
-      "draw",
-      "＝",
-      "HÒA VÁN!",
-      `${choices[playerChoice].label} gặp ${choices[cpuChoice].label}. Không ai được điểm.`
-    );
-  } else if (beats[playerChoice] === cpuChoice) {
-    result = "win";
-
-    // QUAN TRỌNG: cộng điểm cho người chơi
-    playerScore += 1;
-
-    setResult(
-      "win",
-      "✦",
-      "BẠN THẮNG VÁN NÀY!",
-      `${choices[playerChoice].label} thắng ${choices[cpuChoice].label}.`
-    );
-  } else {
-    result = "lose";
-
-    // QUAN TRỌNG: cộng điểm cho máy tính
-    cpuScore += 1;
-
-    setResult(
-      "lose",
-      "↘",
-      "MÁY TÍNH THẮNG VÁN NÀY",
-      `${choices[cpuChoice].label} thắng ${choices[playerChoice].label}.`
-    );
-  }
-
-  // Tăng số ván đã chơi
-  round += 1;
-
-  // QUAN TRỌNG: cập nhật giao diện sau khi tính điểm
-  updateBoard();
-
-  playSound(result);
-
-  // Kiểm tra điều kiện kết thúc
-  const target = getTargetScore();
-
-  if (playerScore >= target) {
-    finishMatch("win");
-  } else if (cpuScore >= target) {
-    finishMatch("lose");
-  }
 }
 
-// ========================================
-// 10. KẾT THÚC TRẬN ĐẤU
-// ========================================
 
-function finishMatch(result) {
-  if (finished) return;
+// ===============================
+// RANK
+// ===============================
 
-  // Đánh dấu trước để tránh kết thúc hai lần
-  finished = true;
+function getRank() {
 
-  const mode = `BO${$("#modeSelect").value}`;
+    const level =
+        data.level;
 
-  const date = new Date().toLocaleString("vi-VN", {
-    day: "2-digit",
-    month: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
 
-  if (result === "win") {
-    stats.wins += 1;
-    stats.currentStreak += 1;
+    if (level >= 30) {
 
-    stats.bestStreak = Math.max(
-      stats.bestStreak,
-      stats.currentStreak
-    );
+        return "Legend";
 
-    setResult(
-      "win",
-      "🏆",
-      "CHIẾN THẮNG CHUNG CUỘC!",
-      `Bạn thắng ${playerScore} - ${cpuScore}. Chúc mừng!`
-    );
+    }
 
-    $("#statusLabel").textContent = "CHIẾN THẮNG";
 
-    celebrate();
-  } else {
-    stats.losses += 1;
-    stats.currentStreak = 0;
+    if (level >= 20) {
 
-    setResult(
-      "lose",
-      "🤖",
-      "TRẬN ĐẤU KẾT THÚC",
-      `Máy tính thắng ${cpuScore} - ${playerScore}. Thử lại nhé!`
-    );
+        return "Master";
 
-    $("#statusLabel").textContent = "ĐÃ KẾT THÚC";
-  }
+    }
 
-  stats.history.unshift({
-    result,
-    mode,
-    date,
-    playerScore,
-    cpuScore
-  });
 
-  // Giới hạn lịch sử 20 trận
-  stats.history = stats.history.slice(0, 20);
+    if (level >= 14) {
 
-  saveStats();
-  renderStats();
+        return "Diamond Elite";
 
-  // Khóa các nút chọn cho đến khi bắt đầu trận mới
-  document.querySelectorAll(".choice").forEach((button) => {
-    button.disabled = true;
-  });
+    }
 
-  playSound(result);
+
+    if (level >= 9) {
+
+        return "Platinum Ace";
+
+    }
+
+
+    if (level >= 5) {
+
+        return "Gold Fighter";
+
+    }
+
+
+    if (level >= 3) {
+
+        return "Silver Warrior";
+
+    }
+
+
+    return "Bronze Rookie";
+
 }
 
-// ========================================
-// 11. HIỂN THỊ THỐNG KÊ
-// ========================================
 
-function renderStats() {
-  $("#wins").textContent = String(stats.wins);
-  $("#losses").textContent = String(stats.losses);
-  $("#bestStreak").textContent = String(stats.bestStreak);
+// ===============================
+// UPDATE PROFILE
+// ===============================
 
-  const total = stats.wins + stats.losses;
+function renderProfile() {
 
-  const rate = total === 0
-    ? 0
-    : Math.round((stats.wins / total) * 100);
+    $("level").textContent =
+        data.level;
 
-  $("#winRate").textContent = `${rate}%`;
 
-  renderHistory();
+    $("rankName").textContent =
+        getRank();
+
+
+    $("totalXp").textContent =
+        data.xp;
+
+
+    const need =
+        xpNeeded();
+
+
+    $("xpText").textContent =
+
+        `${data.xp} / ${need} XP`;
+
+
+    const percent =
+
+        Math.min(
+            100,
+            data.xp / need * 100
+        );
+
+
+    $("xpBar").style.width =
+        percent + "%";
+
+
+    $("wins").textContent =
+        data.wins;
+
+
+    $("losses").textContent =
+        data.losses;
+
+
+    $("draws").textContent =
+        data.draws;
+
+
+    $("streak").textContent =
+        data.streak;
+
+
+    renderAchievements();
+
+    renderHistory();
+
 }
+
+
+// ===============================
+// ADD XP
+// ===============================
+
+function addXP(amount) {
+
+    data.xp += amount;
+
+
+    while (
+        data.xp >= xpNeeded()
+    ) {
+
+        data.xp -= xpNeeded();
+
+        data.level++;
+
+
+        showToast(
+
+            `⬆️ LEVEL UP! Level ${data.level}`
+
+        );
+
+    }
+
+
+    save();
+
+    renderProfile();
+
+}
+
+
+// ===============================
+// ACHIEVEMENTS
+// ===============================
+
+function achievementList() {
+
+    return [
+
+        [
+
+            "first",
+
+            "First Win",
+
+            "Thắng trận đầu tiên",
+
+            data.wins >= 1
+
+        ],
+
+
+        [
+
+            "five",
+
+            "Fighter",
+
+            "Thắng 5 trận",
+
+            data.wins >= 5
+
+        ],
+
+
+        [
+
+            "streak3",
+
+            "Hot Streak",
+
+            "3 chiến thắng liên tiếp",
+
+            data.bestStreak >= 3
+
+        ],
+
+
+        [
+
+            "streak5",
+
+            "Unstoppable",
+
+            "5 chiến thắng liên tiếp",
+
+            data.bestStreak >= 5
+
+        ],
+
+
+        [
+
+            "level10",
+
+            "Elite",
+
+            "Đạt Level 10",
+
+            data.level >= 10
+
+        ],
+
+
+        [
+
+            "capa",
+
+            "CAPA Challenger",
+
+            "Thắng bằng CAPA AI",
+
+            data.achievements.capa
+
+        ],
+
+
+        [
+
+            "survival",
+
+            "Survivor",
+
+            "Hoàn thành Survival",
+
+            data.achievements.survival
+
+        ]
+
+    ];
+
+}
+
+
+// ===============================
+// RENDER ACHIEVEMENTS
+// ===============================
+
+function renderAchievements() {
+
+    const container =
+        $("achievements");
+
+
+    container.innerHTML =
+
+        achievementList()
+
+        .map(
+
+            achievement => {
+
+                const unlocked =
+                    achievement[3];
+
+
+                return `
+
+                    <div class="
+                        achievement
+                        ${unlocked
+                            ? "unlocked"
+                            : ""}
+                    ">
+
+                        <b>
+
+                            ${unlocked
+                                ? "🏆"
+                                : "🔒"}
+
+                            ${achievement[1]}
+
+                        </b>
+
+                        <small>
+
+                            ${achievement[2]}
+
+                        </small>
+
+                    </div>
+
+                `;
+
+            }
+
+        )
+
+        .join("");
+
+}
+
+
+// ===============================
+// HISTORY
+// ===============================
 
 function renderHistory() {
-  const list = $("#historyList");
-  list.replaceChildren();
 
-  if (stats.history.length === 0) {
-    const empty = document.createElement("div");
+    const history =
+        $("history");
 
-    empty.className = "empty-history";
-    empty.textContent = "🎮 Lịch sử sẽ xuất hiện tại đây.";
 
-    list.appendChild(empty);
-    return;
-  }
+    if (
+        data.history.length === 0
+    ) {
 
-  stats.history.slice(0, 8).forEach((item) => {
-    const row = document.createElement("div");
-    row.className = `history-item ${item.result}`;
+        history.textContent =
+            "Chưa có trận đấu.";
 
-    const symbol = document.createElement("span");
-    symbol.className = "history-symbol";
-    symbol.textContent =
-      item.result === "win" ? "↗" :
-      item.result === "lose" ? "↘" : "＝";
+        return;
 
-    const main = document.createElement("div");
-    main.className = "history-main";
+    }
 
-    const title = document.createElement("strong");
-    title.textContent =
-      item.result === "win" ? "Chiến thắng" :
-      item.result === "lose" ? "Thất bại" : "Hòa trận";
 
-    const detail = document.createElement("small");
-    detail.textContent = `${item.mode} · ${item.date}`;
+    history.innerHTML =
 
-    main.append(title, detail);
+        data.history
 
-    const score = document.createElement("span");
-    score.className = "history-score";
-    score.textContent = `${item.playerScore} - ${item.cpuScore}`;
+        .slice(0, 12)
 
-    row.append(symbol, main, score);
-    list.appendChild(row);
-  });
+        .map(
+
+            item => `
+
+                <div
+                    class="history-row"
+                >
+
+                    <span>
+
+                        ${item.mode}
+
+                        •
+
+                        ${item.difficulty}
+
+                    </span>
+
+                    <b>
+
+                        ${item.result}
+
+                    </b>
+
+                </div>
+
+            `
+
+        )
+
+        .join("");
+
 }
 
-// ========================================
-// 12. BẮT ĐẦU TRẬN MỚI
-// ========================================
 
-function resetMatch() {
-  playerScore = 0;
-  cpuScore = 0;
-  round = 1;
-  finished = false;
-  moveHistory = [];
+// ===============================
+// TOAST
+// ===============================
 
-  $("#playerHand").textContent = "✊";
-  $("#cpuHand").textContent = "🤖";
-  $("#statusLabel").textContent = "SẴN SÀNG";
+function showToast(message) {
 
-  document.querySelectorAll(".choice").forEach((button) => {
-    button.disabled = false;
-  });
+    const toast =
+        $("toast");
 
-  $("#celebration").replaceChildren();
 
-  updateBoard();
+    toast.textContent =
+        message;
 
-  setResult(
-    "",
-    "⚡",
-    "Sẵn sàng chiến đấu?",
-    "Chọn một biểu tượng để bắt đầu."
-  );
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+
+        () => {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+
+        1800
+
+    );
+
 }
 
-// ========================================
-// 13. GẮN SỰ KIỆN
-// ========================================
 
-// Chọn Búa, Bao hoặc Kéo
-document.querySelectorAll(".choice").forEach((button) => {
-  button.addEventListener("click", () => {
-    playRound(button.dataset.choice);
-  });
-});
+// ===============================
+// RANDOM MOVE
+// ===============================
 
-// Trận mới
-$("#resetBtn").addEventListener("click", resetMatch);
+function randomMove() {
 
-// Đổi BO3 / BO5
-$("#modeSelect").addEventListener("change", resetMatch);
+    const moves = [
 
-// Đổi độ khó
-$("#difficultySelect").addEventListener("change", () => {
-  moveHistory = [];
+        "rock",
 
-  setResult(
-    "",
-    "🧠",
-    "ĐÃ ĐỔI ĐỘ KHÓ",
-    "Thiết lập mới sẽ được áp dụng từ ván tiếp theo."
-  );
-});
+        "paper",
 
-// Xóa thống kê
-$("#clearBtn").addEventListener("click", () => {
-  const confirmed = window.confirm(
-    "Bạn có chắc muốn xóa toàn bộ thống kê?"
-  );
+        "scissors"
 
-  if (!confirmed) return;
+    ];
 
-  stats = defaultStats();
 
-  saveStats();
-  renderStats();
-});
+    return moves[
 
-// Xóa lịch sử
-$("#clearHistoryBtn").addEventListener("click", () => {
-  if (stats.history.length === 0) return;
+        Math.floor(
+            Math.random() *
+            moves.length
+        )
 
-  const confirmed = window.confirm(
-    "Bạn có chắc muốn xóa lịch sử trận đấu?"
-  );
+    ];
 
-  if (!confirmed) return;
+}
 
-  stats.history = [];
 
-  saveStats();
-  renderHistory();
-});
+// ===============================
+// WEIGHTED MOVE
+// ===============================
 
-// Bật / tắt âm thanh
-$("#soundBtn").addEventListener("click", () => {
-  soundEnabled = !soundEnabled;
+function weightedChoice(
+    moves
+) {
 
-  $("#soundBtn").textContent =
-    soundEnabled ? "🔊" : "🔇";
+    const counts = {
 
-  $("#soundBtn").setAttribute(
-    "aria-label",
-    soundEnabled ? "Tắt âm thanh" : "Bật âm thanh"
-  );
+        rock: 1,
 
-  if (soundEnabled) {
-    playSound("draw");
-  }
-});
+        paper: 1,
 
-// Phím tắt 1, 2, 3
-document.addEventListener("keydown", (event) => {
-  if (
-    event.altKey ||
-    event.ctrlKey ||
-    event.metaKey
-  ) {
-    return;
-  }
+        scissors: 1
 
-  if (
-    ["INPUT", "SELECT", "TEXTAREA"].includes(
-      document.activeElement?.tagName
+    };
+
+
+    moves.forEach(
+
+        move => {
+
+            counts[move]++;
+
+        }
+
+    );
+
+
+    const total =
+
+        counts.rock +
+        counts.paper +
+        counts.scissors;
+
+
+    let random =
+        Math.random() * total;
+
+
+    for (
+        const move
+        of [
+            "rock",
+            "paper",
+            "scissors"
+        ]
+    ) {
+
+        random -=
+            counts[move];
+
+
+        if (random <= 0) {
+
+            return move;
+
+        }
+
+    }
+
+
+    return "rock";
+
+}
+
+
+// ===============================
+// PREDICT PLAYER
+// ===============================
+
+function predictPlayer() {
+
+    const moves =
+        data.moves.slice(-8);
+
+
+    if (
+        moves.length === 0
+    ) {
+
+        return randomMove();
+
+    }
+
+
+    let prediction =
+        weightedChoice(moves);
+
+
+    const last =
+        moves[moves.length - 1];
+
+
+    // Phân tích pattern
+
+    if (
+        moves.length >= 3
+    ) {
+
+        const transitions = {
+
+            rock: {
+                rock: 0,
+                paper: 0,
+                scissors: 0
+            },
+
+            paper: {
+                rock: 0,
+                paper: 0,
+                scissors: 0
+            },
+
+            scissors: {
+                rock: 0,
+                paper: 0,
+                scissors: 0
+            }
+
+        };
+
+
+        for (
+            let i = 0;
+
+            i < moves.length - 1;
+
+            i++
+        ) {
+
+            transitions[
+                moves[i]
+            ][
+                moves[i + 1]
+            ]++;
+
+        }
+
+
+        const current =
+            transitions[last];
+
+
+        const best =
+            Object.keys(current)
+
+            .sort(
+                (a, b) =>
+                    current[b] -
+                    current[a]
+            )[0];
+
+
+        if (
+            current[best] > 0 &&
+            Math.random() < 0.65
+        ) {
+
+            prediction =
+                best;
+
+        }
+
+    }
+
+
+    return prediction;
+
+}
+
+
+// ===============================
+// CPU AI
+// ===============================
+
+function cpuMove(level) {
+
+    // EASY
+
+    if (
+        level === "easy"
+    ) {
+
+        return randomMove();
+
+    }
+
+
+    // NORMAL
+
+    if (
+        level === "normal"
+    ) {
+
+        return Math.random() < 0.65
+
+            ? randomMove()
+
+            : beats[
+                predictPlayer()
+            ];
+
+    }
+
+
+    // HARD
+
+    if (
+        level === "hard"
+    ) {
+
+        return Math.random() < 0.78
+
+            ? beats[
+                predictPlayer()
+            ]
+
+            : randomMove();
+
+    }
+
+
+    // CAPA
+
+    return Math.random() < 0.90
+
+        ? beats[
+            predictPlayer()
+        ]
+
+        : randomMove();
+
+}
+
+
+// ===============================
+// RESULT
+// ===============================
+
+function getResult(
+    player,
+    cpu
+) {
+
+    if (
+        player === cpu
+    ) {
+
+        return "draw";
+
+    }
+
+
+    if (
+        beats[player] === cpu
+    ) {
+
+        return "win";
+
+    }
+
+
+    return "lose";
+
+}
+
+
+// ===============================
+// UPDATE BOARD
+// ===============================
+
+function updateBoard() {
+
+    $("playerScore")
+        .textContent =
+        playerScore;
+
+
+    $("cpuScore")
+        .textContent =
+        cpuScore;
+
+
+    const mode =
+        $("mode").value;
+
+
+    let target;
+
+
+    if (
+        mode === "bo3"
+    ) {
+
+        target = 2;
+
+    }
+
+    else if (
+        mode === "bo5"
+    ) {
+
+        target = 3;
+
+    }
+
+    else {
+
+        target = 5;
+
+    }
+
+
+    let progress;
+
+
+    if (
+        mode === "survival"
+    ) {
+
+        progress =
+            ((round - 1) /
+            target) *
+            100;
+
+    }
+
+    else {
+
+        progress =
+
+            Math.max(
+                playerScore,
+                cpuScore
+            )
+            / target
+            * 100;
+
+    }
+
+
+    $("progressBar")
+        .style.width =
+        Math.min(
+            100,
+            progress
+        ) + "%";
+
+
+    if (
+        mode === "survival"
+    ) {
+
+        $("roundText")
+            .textContent =
+            `Survival • Round ${round}`;
+
+    }
+
+    else {
+
+        $("roundText")
+            .textContent =
+            `Round ${round}`;
+
+    }
+
+}
+
+
+// ===============================
+// PLAYER CHOICE
+// ===============================
+
+function choose(player) {
+
+    if (locked) {
+
+        return;
+
+    }
+
+
+    locked = true;
+
+
+    const difficulty =
+        $("difficulty").value;
+
+
+    const cpu =
+        cpuMove(
+            difficulty
+        );
+
+
+    const result =
+        getResult(
+            player,
+            cpu
+        );
+
+
+    // SAVE PLAYER MOVE
+
+    data.moves.push(
+        player
+    );
+
+
+    if (
+        data.moves.length > 30
+    ) {
+
+        data.moves.shift();
+
+    }
+
+
+    // DISPLAY
+
+    $("playerMove")
+        .textContent =
+        icons[player];
+
+
+    $("cpuMove")
+        .textContent =
+        icons[cpu];
+
+
+    $("result")
+        .textContent =
+
+        result === "win"
+
+            ? "YOU WIN"
+
+            : result === "lose"
+
+            ? "CAPA WINS"
+
+            : "DRAW";
+
+
+    $("result").className =
+        "result " + result;
+
+
+    // WIN
+
+    if (
+        result === "win"
+    ) {
+
+        playerScore++;
+
+        data.streak++;
+
+
+        data.bestStreak =
+
+            Math.max(
+
+                data.bestStreak,
+
+                data.streak
+
+            );
+
+
+        addXP(20);
+
+
+        $("message")
+            .textContent =
+
+            `Bạn thắng!
+             ${names[player]}
+             thắng
+             ${names[cpu]}.`;
+
+    }
+
+
+    // LOSE
+
+    else if (
+        result === "lose"
+    ) {
+
+        cpuScore++;
+
+        data.streak = 0;
+
+
+        addXP(5);
+
+
+        $("message")
+            .textContent =
+
+            `CAPA thắng bằng
+             ${names[cpu]}.`;
+
+    }
+
+
+    // DRAW
+
+    else {
+
+        data.draws++;
+
+
+        $("message")
+            .textContent =
+
+            "Hai bên chọn giống nhau.";
+
+    }
+
+
+    updateBoard();
+
+    setTimeout(
+
+        () => {
+
+            nextRound(
+                result
+            );
+
+        },
+
+        650
+
+    );
+
+}
+
+
+// ===============================
+// NEXT ROUND
+// ===============================
+
+function nextRound(
+    result
+) {
+
+    const mode =
+        $("mode").value;
+
+
+    let target;
+
+
+    if (
+        mode === "bo3"
+    ) {
+
+        target = 2;
+
+    }
+
+    else if (
+        mode === "bo5"
+    ) {
+
+        target = 3;
+
+    }
+
+    else {
+
+        target = 5;
+
+    }
+
+
+    // SURVIVAL
+
+    if (
+        mode === "survival"
+    ) {
+
+        if (
+            result === "lose"
+        ) {
+
+            finishMatch(
+                "lose"
+            );
+
+            return;
+
+        }
+
+
+        round++;
+
+
+        if (
+            round > 5
+        ) {
+
+            data.achievements
+                .survival = true;
+
+
+            finishMatch(
+                "win"
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    // BO3 / BO5
+
+    else {
+
+        if (
+            playerScore >= target ||
+            cpuScore >= target
+        ) {
+
+            finishMatch(
+
+                playerScore >
+                cpuScore
+
+                    ? "win"
+
+                    : "lose"
+
+            );
+
+            return;
+
+        }
+
+
+        round++;
+
+    }
+
+
+    locked = false;
+
+    updateBoard();
+
+    save();
+
+    renderProfile();
+
+}
+
+
+// ===============================
+// FINISH MATCH
+// ===============================
+
+function finishMatch(
+    result
+) {
+
+    locked = true;
+
+
+    if (
+        result === "win"
+    ) {
+
+        data.wins++;
+
+
+        if (
+            $("difficulty").value
+            === "capa"
+        ) {
+
+            data.achievements
+                .capa = true;
+
+        }
+
+
+        addXP(60);
+
+    }
+
+    else {
+
+        data.losses++;
+
+        addXP(10);
+
+    }
+
+
+    // HISTORY
+
+    data.history.unshift({
+
+        mode:
+            $("mode")
+            .value
+            .toUpperCase(),
+
+        difficulty:
+            $("difficulty")
+            .value
+            .toUpperCase(),
+
+        result:
+            result === "win"
+
+                ? "🏆 WIN"
+
+                : "💀 LOSS"
+
+    });
+
+
+    // Chỉ giữ 20 trận
+
+    data.history =
+        data.history.slice(
+            0,
+            20
+        );
+
+
+    save();
+
+    renderProfile();
+
+
+    if (
+        result === "win"
+    ) {
+
+        $("status")
+            .textContent =
+            "🏆 BẠN THẮNG TRẬN!";
+
+
+        $("message")
+            .textContent =
+            "Tuyệt vời! Bạn đã đánh bại CAPA.";
+
+    }
+
+    else {
+
+        $("status")
+            .textContent =
+            "💀 CAPA THẮNG TRẬN!";
+
+
+        $("message")
+            .textContent =
+            "CAPA đã đọc được chiến thuật của bạn.";
+
+    }
+
+}
+
+
+// ===============================
+// RESET GAME
+// ===============================
+
+function resetGame() {
+
+    playerScore = 0;
+
+    cpuScore = 0;
+
+    round = 1;
+
+    locked = false;
+
+
+    $("playerMove")
+        .textContent = "?";
+
+
+    $("cpuMove")
+        .textContent = "?";
+
+
+    $("result")
+        .textContent = "READY";
+
+
+    $("result")
+        .className = "result";
+
+
+    $("status")
+        .textContent =
+        "Chọn một nước đi";
+
+
+    $("message")
+        .textContent =
+        "Chọn Búa, Bao hoặc Kéo để bắt đầu.";
+
+
+    updateBoard();
+
+}
+
+
+// ===============================
+// BUTTON EVENTS
+// ===============================
+
+document
+    .querySelectorAll(
+        ".choice"
     )
-  ) {
-    return;
-  }
+    .forEach(
 
-  const keyToChoice = {
-    "1": "rock",
-    "2": "paper",
-    "3": "scissors"
-  };
+        button => {
 
-  const selected = keyToChoice[event.key];
+            button.addEventListener(
 
-  if (!selected) return;
+                "click",
 
-  const button = document.querySelector(
-    `[data-choice="${selected}"]`
-  );
+                () => {
 
-  if (button && !button.disabled) {
-    playRound(selected);
-  }
-});
+                    choose(
+                        button
+                            .dataset
+                            .choice
+                    );
 
-// ========================================
-// 14. KHỞI TẠO
-// ========================================
+                }
 
-function initGame() {
-  if (!checkHTML()) {
-    $("#statusLabel").textContent = "LỖI HTML";
-    return;
-  }
+            );
 
-  updateBoard();
-  renderStats();
+        }
 
-  console.log("Neon Arena 2.1 đã khởi tạo thành công!");
-}
+    );
 
-initGame();
+
+// ===============================
+// RESET BUTTON
+// ===============================
+
+$("resetBtn")
+    .addEventListener(
+
+        "click",
+
+        resetGame
+
+    );
+
+
+// ===============================
+// KEYBOARD
+// ===============================
+
+document.addEventListener(
+
+    "keydown",
+
+    event => {
+
+        if (
+            event.key === "1"
+        ) {
+
+            choose("rock");
+
+        }
+
+
+        if (
+            event.key === "2"
+        ) {
+
+            choose("paper");
+
+        }
+
+
+        if (
+            event.key === "3"
+        ) {
+
+            choose("scissors");
+
+        }
+
+    }
+
+);
+
+
+// ===============================
+// MODE CHANGE
+// ===============================
+
+$("mode")
+    .addEventListener(
+
+        "change",
+
+        resetGame
+
+    );
+
+
+// ===============================
+// DIFFICULTY CHANGE
+// ===============================
+
+$("difficulty")
+    .addEventListener(
+
+        "change",
+
+        resetGame
+
+    );
+
+
+// ===============================
+// START
+// ===============================
+
+renderProfile();
+
+updateBoard();
