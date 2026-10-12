@@ -1,74 +1,128 @@
+
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Game Oẳn Tù Tì</title>
+    <meta name="theme-color" content="#080b16">
+    <title>Oẳn Tù Tì | Neon Arena</title>
 
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 
 <body>
+    <div id="celebration"></div>
 
-    <div class="game">
-
-        <h1>🎮 GAME OẲN TÙ TÌ</h1>
-
-        <h2>ĐẤU BO3</h2>
-
-        <div class="score">
-            <div>
-                <h3>👤 BẠN</h3>
-                <p id="playerScore">0</p>
+    <main class="container">
+        <header>
+            <div class="brand">
+                <div class="brand-icon">✊</div>
+                <div>
+                    NEON ARENA
+                    <small>OẲN TÙ TÌ</small>
+                </div>
             </div>
+            <div class="status">● SẴN SÀNG</div>
+        </header>
 
-            <div>
-                <h3>🤖 MÁY</h3>
-                <p id="computerScore">0</p>
-            </div>
-        </div>
-
-        <div class="result">
-            <p id="computerChoice">
-                🤖 Máy chưa chọn
+        <section class="hero">
+            <div class="eyebrow">CHALLENGE YOURSELF</div>
+            <h1>ROCK <span>PAPER</span> SCISSORS</h1>
+            <p class="subtitle">
+                Một lựa chọn. Một đối thủ. Ai sẽ chiến thắng?
             </p>
+        </section>
 
-            <h2 id="resultText">
-                Hãy chọn một lựa chọn!
-            </h2>
-        </div>
+        <section class="arena">
+            <div class="mode">
+                <span>CHẾ ĐỘ</span>
+                <strong>🏆 BEST OF 3</strong>
+            </div>
 
-        <div class="choices">
+            <div class="scoreboard">
+                <div class="player">
+                    <div class="avatar" id="playerHand">✊</div>
+                    <div class="player-name">👤 BẠN</div>
+                    <div class="score player-score" id="playerScore">0</div>
+                </div>
 
-            <button onclick="play('búa')">
-                ✊
-                <span>BÚA</span>
-            </button>
+                <div class="vs">VS</div>
 
-            <button onclick="play('kéo')">
-                ✌️
-                <span>KÉO</span>
-            </button>
+                <div class="player">
+                    <div class="avatar" id="cpuHand">🤖</div>
+                    <div class="player-name">MÁY TÍNH 🤖</div>
+                    <div class="score cpu-score" id="cpuScore">0</div>
+                </div>
+            </div>
 
-            <button onclick="play('bao')">
-                🖐️
-                <span>BAO</span>
-            </button>
+            <div class="round-info">
+                VÁN <strong id="roundNumber">1</strong>
+                · AI ĐẠT 2 ĐIỂM TRƯỚC SẼ THẮNG
+            </div>
 
-        </div>
+            <div class="result" id="result" aria-live="polite">
+                <div class="result-title" id="resultTitle">
+                    Sẵn sàng chiến đấu? ⚡
+                </div>
+                <div class="result-detail" id="resultDetail">
+                    Hãy chọn Búa, Kéo hoặc Bao!
+                </div>
+            </div>
 
-        <button
-            class="reset"
-            onclick="resetGame()">
-            🔄 CHƠI LẠI
-        </button>
+            <div class="choices-title">CHỌN VŨ KHÍ CỦA BẠN</div>
 
-    </div>
+            <div class="choices">
+                <button class="choice" data-choice="rock">
+                    <span class="choice-emoji">✊</span>
+                    <span class="choice-name">BÚA</span>
+                    <span class="choice-hint">Đập tan mọi thứ</span>
+                </button>
 
-    <script src="script.js"></script>
+                <button class="choice" data-choice="scissors">
+                    <span class="choice-emoji">✌️</span>
+                    <span class="choice-name">KÉO</span>
+                    <span class="choice-hint">Sắc bén bất ngờ</span>
+                </button>
 
+                <button class="choice" data-choice="paper">
+                    <span class="choice-emoji">🖐️</span>
+                    <span class="choice-name">BAO</span>
+                    <span class="choice-hint">Bao trọn chiến thắng</span>
+                </button>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" id="resetBtn">
+                    ↻ VÁN MỚI
+                </button>
+                <button class="btn" id="clearBtn">
+                    🗑 XÓA THỐNG KÊ
+                </button>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat">
+                <div class="stat-label">🎯 TỔNG TRẬN THẮNG</div>
+                <div class="stat-value" id="wins">0</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">💫 TỔNG TRẬN THUA</div>
+                <div class="stat-value" id="losses">0</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">🏆 ĐIỂM CAO NHẤT</div>
+                <div class="stat-value" id="best">0</div>
+            </div>
+        </section>
+
+        <footer>
+            Được tạo bằng <span>HTML · CSS · JavaScript</span>
+            <br>Tiến bộ qua từng ván đấu!
+        </footer>
+    </main>
 </body>
-
 </html>
