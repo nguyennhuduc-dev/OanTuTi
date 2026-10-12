@@ -4,12 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#090d1b">
-  <meta name="description" content="Neon Arena - game Oẳn Tù Tì">
-  <title>Neon Arena 2.0 | Oẳn Tù Tì</title>
+  <title>Neon Arena 2.1 | Oẳn Tù Tì</title>
 
-  <link rel="stylesheet" href="./style.css?v=2.0">
-
-  <script src="./script.js?v=2.0" defer></script>
+  <link rel="stylesheet" href="./style.css?v=21">
+  <script src="./script.js?v=21" defer></script>
 </head>
 <body>
   <div class="ambient ambient-one"></div>
@@ -20,7 +18,7 @@
     <header class="topbar">
       <a class="brand" href="./">
         <span class="brand-mark">✊</span>
-        <span class="brand-copy">
+        <span>
           <strong>NEON ARENA</strong>
           <small>ROCK · PAPER · SCISSORS</small>
         </span>
@@ -28,7 +26,7 @@
 
       <div class="topbar-right">
         <span class="live-dot"></span>
-        <span class="status-label" id="statusLabel">SẴN SÀNG</span>
+        <span id="statusLabel">SẴN SÀNG</span>
         <button class="icon-button" id="soundBtn" type="button"
           aria-label="Bật hoặc tắt âm thanh">🔇</button>
       </div>
@@ -40,7 +38,7 @@
       <p>Đọc vị đối thủ. Chọn đúng thời điểm. Làm chủ đấu trường.</p>
     </section>
 
-    <section class="game-panel panel">
+    <section class="panel game-panel">
       <div class="panel-heading">
         <div>
           <span class="section-kicker">01 / ĐẤU TRƯỜNG</span>
@@ -71,8 +69,8 @@
       <div class="scoreboard">
         <article class="contestant">
           <div class="contestant-label">
-            <span class="player-dot"></span> BẠN
-            <small>PLAYER 01</small>
+            <span class="player-dot"></span>
+            BẠN
           </div>
           <div class="hand-frame player-frame">
             <span class="hand" id="playerHand">✊</span>
@@ -81,15 +79,12 @@
           <div class="score-caption">ĐIỂM CỦA BẠN</div>
         </article>
 
-        <div class="versus">
-          <span>VS</span>
-          <small>ROUND<br>DUEL</small>
-        </div>
+        <div class="versus"><span>VS</span></div>
 
         <article class="contestant">
           <div class="contestant-label">
-            <span class="cpu-dot"></span> MÁY TÍNH
-            <small>CPU</small>
+            <span class="cpu-dot"></span>
+            MÁY TÍNH
           </div>
           <div class="hand-frame cpu-frame">
             <span class="hand" id="cpuHand">🤖</span>
@@ -113,13 +108,13 @@
         <span class="result-symbol" id="resultSymbol">⚡</span>
         <div>
           <strong id="resultTitle">Sẵn sàng chiến đấu?</strong>
-          <p id="resultDetail">Chọn một biểu tượng để bắt đầu ván đầu tiên.</p>
+          <p id="resultDetail">Chọn một biểu tượng để bắt đầu.</p>
         </div>
       </div>
 
       <div class="choices-heading">
         <span>02 / CHỌN NƯỚC ĐI</span>
-        <small>Chọn Búa, Kéo hoặc Bao</small>
+        <small>Chọn Búa, Bao hoặc Kéo</small>
       </div>
 
       <div class="choices">
@@ -150,13 +145,11 @@
           ↻ TRẬN MỚI
         </button>
         <button class="button button-quiet" id="clearBtn" type="button">
-          Xóa thống kê
+          XÓA THỐNG KÊ
         </button>
       </div>
 
-      <p class="keyboard-hint">
-        MẸO: Dùng phím 1, 2, 3 để chọn nhanh.
-      </p>
+      <p class="keyboard-hint">Mẹo: Nhấn phím 1, 2, 3 để chọn nhanh.</p>
     </section>
 
     <section class="stats-section">
@@ -199,7 +192,7 @@
       </div>
     </section>
 
-    <section class="history-section panel">
+    <section class="panel history-section">
       <div class="section-title-row">
         <div>
           <span class="section-kicker">04 / NHẬT KÝ</span>
@@ -211,9 +204,7 @@
       </div>
 
       <div class="history-list" id="historyList">
-        <div class="empty-history">
-          🎮 Lịch sử trận đấu sẽ xuất hiện tại đây.
-        </div>
+        <div class="empty-history">🎮 Lịch sử sẽ xuất hiện tại đây.</div>
       </div>
     </section>
 
@@ -221,7 +212,7 @@
       <span class="footer-mark">✦</span>
       NEON ARENA
       <span class="footer-divider">/</span>
-      Được xây dựng bằng HTML, CSS & JavaScript
+      HTML · CSS · JavaScript
       <span class="footer-year">2026</span>
     </footer>
   </main>
