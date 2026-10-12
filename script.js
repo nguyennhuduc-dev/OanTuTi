@@ -1,1571 +1,1043 @@
-// ============================================
-// OẲN TÙ TÌ CAPA
-// ============================================
-
-
-// ===============================
-// SHORTCUT
-// ===============================
-
-const $ = (id) => document.getElementById(id);
-
-
-// ===============================
-// GAME DATA
-// ===============================
+```javascript
+/* =========================================
+   OẲN TÙ TÌ CAPA PRO
+   ========================================= */
 
 const icons = {
-
-    rock: "✊",
-
-    paper: "✋",
-
-    scissors: "✌️"
-
+    rock: "🪨",
+    paper: "📄",
+    scissors: "✂️"
 };
-
 
 const names = {
-
-    rock: "Búa",
-
-    paper: "Bao",
-
-    scissors: "Kéo"
-
+    rock: "ROCK",
+    paper: "PAPER",
+    scissors: "SCISSORS"
 };
-
-
-// Nước nào thắng nước nào
 
 const beats = {
-
     rock: "scissors",
-
     paper: "rock",
-
     scissors: "paper"
-
 };
 
 
-// ===============================
-// DEFAULT PLAYER DATA
-// ===============================
+/* =========================================
+   DATA
+   ========================================= */
 
 const defaultData = {
-
     xp: 0,
-
+    totalXp: 0,
     level: 1,
 
     wins: 0,
-
     losses: 0,
-
     draws: 0,
 
     streak: 0,
-
     bestStreak: 0,
 
     history: [],
-
     moves: [],
 
     achievements: {}
-
 };
-
-
-// ===============================
-// LOAD DATA
-// ===============================
 
 let data = loadData();
 
 
-// ===============================
-// CURRENT MATCH
-// ===============================
+function loadData() {
+
+    const saved = localStorage.getItem("oanTuTiCAPA");
+
+    if (!saved) {
+        return { ...defaultData };
+    }
+
+    try {
+        return {
+            ...defaultData,
+            ...JSON.parse(saved)
+        };
+    } catch {
+        return { ...defaultData };
+    }
+}
+
+
+function saveData() {
+    localStorage.setItem(
+        "oanTuTiCAPA",
+        JSON.stringify(data)
+    );
+}
+
+
+/* =========================================
+   GAME STATE
+   ========================================= */
 
 let playerScore = 0;
-
 let cpuScore = 0;
 
 let round = 1;
 
 let locked = false;
+let matchFinished = false;
 
 
-// ===============================
-// LOCAL STORAGE
-// ===============================
+/* =========================================
+   ELEMENTS
+   ========================================= */
 
-function loadData() {
+const playerScoreEl = document.getElementById("playerScore");
+const cpuScoreEl = document.getElementById("cpuScore");
 
-    try {
+const roundText = document.getElementById("roundText");
+const progressText = document.getElementById("progressText");
+const progressBar = document.getElementById("progressBar");
 
-        const saved =
-            localStorage.getItem(
-                "oanTuTiCAPA"
-            );
+const playerMoveEl = document.getElementById("playerMove");
+const cpuMoveEl = document.getElementById("cpuMove");
 
-        if (!saved) {
+const resultEl = document.getElementById("result");
+const messageEl = document.getElementById("message");
 
-            return {
-                ...defaultData
-            };
+const statusEl = document.getElementById("status");
 
-        }
+const streakEl = document.getElementById("streak");
+const winsEl = document.getElementById("wins");
+const lossesEl = document.getElementById("losses");
+const drawsEl = document.getElementById("draws");
+const totalXpEl = document.getElementById("totalXp");
 
-        return {
+const levelEl = document.getElementById("level");
+const rankNameEl = document.getElementById("rankName");
 
-            ...defaultData,
+const xpBarEl = document.getElementById("xpBar");
+const xpTextEl = document.getElementById("xpText");
 
-            ...JSON.parse(saved)
+const achievementsEl = document.getElementById("achievements");
+const achievementCountEl =
+    document.getElementById("achievementCount");
 
-        };
+const historyEl = document.getElementById("history");
 
-    }
+const toastEl = document.getElementById("toast");
 
-    catch {
-
-        return {
-            ...defaultData
-        };
-
-    }
-
-}
+const modeEl = document.getElementById("mode");
+const difficultyEl = document.getElementById("difficulty");
 
 
-// ===============================
-// SAVE
-// ===============================
+/* =========================================
+   XP / LEVEL / RANK
+   ========================================= */
 
-function save() {
+function xpNeeded(level) {
 
-    try {
-
-        localStorage.setItem(
-
-            "oanTuTiCAPA",
-
-            JSON.stringify(data)
-
-        );
-
-    }
-
-    catch {
-
-        console.log(
-            "Không thể lưu dữ liệu."
-        );
-
-    }
+    return 100 + (level - 1) * 50;
 
 }
 
 
-// ===============================
-// XP
-// ===============================
+function getRank(level) {
 
-function xpNeeded() {
+    if (level >= 50) return "LEGEND";
+    if (level >= 35) return "MASTER";
+    if (level >= 25) return "DIAMOND";
+    if (level >= 15) return "PLATINUM";
+    if (level >= 8) return "GOLD";
+    if (level >= 4) return "SILVER";
 
-    return 100 +
-        (data.level - 1) * 50;
-
+    return "BRONZE";
 }
 
-
-// ===============================
-// RANK
-// ===============================
-
-function getRank() {
-
-    const level =
-        data.level;
-
-
-    if (level >= 30) {
-
-        return "Legend";
-
-    }
-
-
-    if (level >= 20) {
-
-        return "Master";
-
-    }
-
-
-    if (level >= 14) {
-
-        return "Diamond Elite";
-
-    }
-
-
-    if (level >= 9) {
-
-        return "Platinum Ace";
-
-    }
-
-
-    if (level >= 5) {
-
-        return "Gold Fighter";
-
-    }
-
-
-    if (level >= 3) {
-
-        return "Silver Warrior";
-
-    }
-
-
-    return "Bronze Rookie";
-
-}
-
-
-// ===============================
-// UPDATE PROFILE
-// ===============================
 
 function renderProfile() {
 
-    $("level").textContent =
-        data.level;
-
-
-    $("rankName").textContent =
-        getRank();
-
-
-    $("totalXp").textContent =
-        data.xp;
-
-
-    const need =
-        xpNeeded();
-
-
-    $("xpText").textContent =
-
-        `${data.xp} / ${need} XP`;
-
+    const needed = xpNeeded(data.level);
 
     const percent =
+        Math.min(100, (data.xp / needed) * 100);
 
-        Math.min(
-            100,
-            data.xp / need * 100
-        );
+    levelEl.textContent = data.level;
 
+    rankNameEl.textContent =
+        getRank(data.level);
 
-    $("xpBar").style.width =
+    xpBarEl.style.width =
         percent + "%";
 
+    xpTextEl.textContent =
+        `${data.xp} / ${needed} XP`;
 
-    $("wins").textContent =
-        data.wins;
-
-
-    $("losses").textContent =
-        data.losses;
-
-
-    $("draws").textContent =
-        data.draws;
-
-
-    $("streak").textContent =
-        data.streak;
-
-
-    renderAchievements();
-
-    renderHistory();
-
+    totalXpEl.textContent =
+        data.totalXp;
 }
 
-
-// ===============================
-// ADD XP
-// ===============================
 
 function addXP(amount) {
 
     data.xp += amount;
+    data.totalXp += amount;
 
+    let leveledUp = false;
 
-    while (
-        data.xp >= xpNeeded()
-    ) {
+    while (data.xp >= xpNeeded(data.level)) {
 
-        data.xp -= xpNeeded();
+        data.xp -= xpNeeded(data.level);
 
         data.level++;
 
-
-        showToast(
-
-            `⬆️ LEVEL UP! Level ${data.level}`
-
-        );
-
+        leveledUp = true;
     }
 
+    if (leveledUp) {
 
-    save();
+        showToast(
+            `🎉 LEVEL UP! Bạn đạt Level ${data.level}`
+        );
+    }
+
+    saveData();
 
     renderProfile();
-
 }
 
 
-// ===============================
-// ACHIEVEMENTS
-// ===============================
+/* =========================================
+   ACHIEVEMENTS
+   ========================================= */
 
-function achievementList() {
+const achievementList = [
 
-    return [
+    {
+        id: "first",
+        icon: "🥇",
+        title: "FIRST WIN",
+        description: "Thắng trận đầu tiên",
+        check: () => data.wins >= 1
+    },
 
-        [
+    {
+        id: "fighter",
+        icon: "⚔️",
+        title: "FIGHTER",
+        description: "Thắng 5 trận",
+        check: () => data.wins >= 5
+    },
 
-            "first",
+    {
+        id: "hot",
+        icon: "🔥",
+        title: "HOT STREAK",
+        description: "Đạt chuỗi thắng 5",
+        check: () => data.bestStreak >= 5
+    },
 
-            "First Win",
+    {
+        id: "unstoppable",
+        icon: "💀",
+        title: "UNSTOPPABLE",
+        description: "Đạt chuỗi thắng 10",
+        check: () => data.bestStreak >= 10
+    },
 
-            "Thắng trận đầu tiên",
+    {
+        id: "elite",
+        icon: "💎",
+        title: "ELITE",
+        description: "Đạt Level 10",
+        check: () => data.level >= 10
+    },
 
-            data.wins >= 1
+    {
+        id: "capa",
+        icon: "🤖",
+        title: "CAPA CHALLENGER",
+        description: "Thắng CAPA AI",
+        check: () =>
+            data.history.some(
+                item =>
+                    item.result === "WIN" &&
+                    item.difficulty === "capa"
+            )
+    },
 
-        ],
+    {
+        id: "survivor",
+        icon: "🛡️",
+        title: "SURVIVOR",
+        description: "Hoàn thành Survival",
+        check: () =>
+            data.history.some(
+                item =>
+                    item.mode === "survival" &&
+                    item.result === "WIN"
+            )
+    }
+];
 
-
-        [
-
-            "five",
-
-            "Fighter",
-
-            "Thắng 5 trận",
-
-            data.wins >= 5
-
-        ],
-
-
-        [
-
-            "streak3",
-
-            "Hot Streak",
-
-            "3 chiến thắng liên tiếp",
-
-            data.bestStreak >= 3
-
-        ],
-
-
-        [
-
-            "streak5",
-
-            "Unstoppable",
-
-            "5 chiến thắng liên tiếp",
-
-            data.bestStreak >= 5
-
-        ],
-
-
-        [
-
-            "level10",
-
-            "Elite",
-
-            "Đạt Level 10",
-
-            data.level >= 10
-
-        ],
-
-
-        [
-
-            "capa",
-
-            "CAPA Challenger",
-
-            "Thắng bằng CAPA AI",
-
-            data.achievements.capa
-
-        ],
-
-
-        [
-
-            "survival",
-
-            "Survivor",
-
-            "Hoàn thành Survival",
-
-            data.achievements.survival
-
-        ]
-
-    ];
-
-}
-
-
-// ===============================
-// RENDER ACHIEVEMENTS
-// ===============================
 
 function renderAchievements() {
 
-    const container =
-        $("achievements");
+    let unlocked = 0;
 
+    achievementsEl.innerHTML = "";
 
-    container.innerHTML =
+    achievementList.forEach(a => {
 
-        achievementList()
+        const isUnlocked = a.check();
 
-        .map(
+        if (isUnlocked) {
+            unlocked++;
 
-            achievement => {
+            data.achievements[a.id] = true;
+        }
 
-                const unlocked =
-                    achievement[3];
+        const div = document.createElement("div");
 
+        div.className =
+            "achievement " +
+            (isUnlocked ? "unlocked" : "locked");
 
-                return `
+        div.innerHTML = `
+            <div class="achievement-icon">
+                ${isUnlocked ? a.icon : "🔒"}
+            </div>
 
-                    <div class="
-                        achievement
-                        ${unlocked
-                            ? "unlocked"
-                            : ""}
-                    ">
+            <div class="achievement-info">
+                <strong>${a.title}</strong>
+                <span>${a.description}</span>
+            </div>
+        `;
 
-                        <b>
+        achievementsEl.appendChild(div);
+    });
 
-                            ${unlocked
-                                ? "🏆"
-                                : "🔒"}
+    achievementCountEl.textContent =
+        `${unlocked} / ${achievementList.length}`;
 
-                            ${achievement[1]}
-
-                        </b>
-
-                        <small>
-
-                            ${achievement[2]}
-
-                        </small>
-
-                    </div>
-
-                `;
-
-            }
-
-        )
-
-        .join("");
-
+    saveData();
 }
 
 
-// ===============================
-// HISTORY
-// ===============================
+/* =========================================
+   HISTORY
+   ========================================= */
 
 function renderHistory() {
 
-    const history =
-        $("history");
+    if (data.history.length === 0) {
 
-
-    if (
-        data.history.length === 0
-    ) {
-
-        history.textContent =
-            "Chưa có trận đấu.";
+        historyEl.innerHTML = `
+            <div class="empty">
+                Chưa có trận đấu nào.
+            </div>
+        `;
 
         return;
-
     }
 
-
-    history.innerHTML =
-
+    historyEl.innerHTML =
         data.history
+            .slice()
+            .reverse()
+            .slice(0, 12)
+            .map(item => {
 
-        .slice(0, 12)
+                let icon = "🤝";
 
-        .map(
+                if (item.result === "WIN") {
+                    icon = "🏆";
+                }
 
-            item => `
+                if (item.result === "LOSS") {
+                    icon = "❌";
+                }
 
-                <div
-                    class="history-row"
-                >
+                return `
+                    <div class="history-item">
 
-                    <span>
+                        <span>
+                            ${icon}
+                            ${item.result}
+                        </span>
 
-                        ${item.mode}
+                        <span>
+                            ${item.mode.toUpperCase()}
+                        </span>
 
-                        •
+                        <span>
+                            ${item.player} -
+                            ${item.cpu}
+                        </span>
 
-                        ${item.difficulty}
+                        <span>
+                            +${item.xp} XP
+                        </span>
 
-                    </span>
-
-                    <b>
-
-                        ${item.result}
-
-                    </b>
-
-                </div>
-
-            `
-
-        )
-
-        .join("");
-
+                    </div>
+                `;
+            })
+            .join("");
 }
 
 
-// ===============================
-// TOAST
-// ===============================
+/* =========================================
+   TOAST
+   ========================================= */
 
-function showToast(message) {
+let toastTimer;
 
-    const toast =
-        $("toast");
+function showToast(text) {
 
+    clearTimeout(toastTimer);
 
-    toast.textContent =
-        message;
+    toastEl.textContent = text;
 
+    toastEl.classList.add("show");
 
-    toast.classList.add(
-        "show"
-    );
+    toastTimer = setTimeout(() => {
 
+        toastEl.classList.remove("show");
 
-    setTimeout(
-
-        () => {
-
-            toast.classList.remove(
-                "show"
-            );
-
-        },
-
-        1800
-
-    );
-
+    }, 2200);
 }
 
 
-// ===============================
-// RANDOM MOVE
-// ===============================
+/* =========================================
+   AI
+   ========================================= */
 
 function randomMove() {
 
-    const moves = [
-
-        "rock",
-
-        "paper",
-
-        "scissors"
-
-    ];
-
+    const moves =
+        ["rock", "paper", "scissors"];
 
     return moves[
-
-        Math.floor(
-            Math.random() *
-            moves.length
-        )
-
+        Math.floor(Math.random() * moves.length)
     ];
-
 }
 
 
-// ===============================
-// WEIGHTED MOVE
-// ===============================
+function weightedChoice() {
 
-function weightedChoice(
-    moves
-) {
+    const recent =
+        data.moves.slice(-8);
 
-    const counts = {
-
-        rock: 1,
-
-        paper: 1,
-
-        scissors: 1
-
-    };
-
-
-    moves.forEach(
-
-        move => {
-
-            counts[move]++;
-
-        }
-
-    );
-
-
-    const total =
-
-        counts.rock +
-        counts.paper +
-        counts.scissors;
-
-
-    let random =
-        Math.random() * total;
-
-
-    for (
-        const move
-        of [
-            "rock",
-            "paper",
-            "scissors"
-        ]
-    ) {
-
-        random -=
-            counts[move];
-
-
-        if (random <= 0) {
-
-            return move;
-
-        }
-
+    if (recent.length === 0) {
+        return randomMove();
     }
 
+    const count = {
+        rock: 0,
+        paper: 0,
+        scissors: 0
+    };
 
-    return "rock";
+    recent.forEach(move => {
+        count[move]++;
+    });
 
+    const total = recent.length;
+
+    const random = Math.random() * total;
+
+    let current = 0;
+
+    for (const move in count) {
+
+        current += count[move];
+
+        if (random <= current) {
+            return move;
+        }
+    }
+
+    return randomMove();
 }
 
-
-// ===============================
-// PREDICT PLAYER
-// ===============================
 
 function predictPlayer() {
 
-    const moves =
-        data.moves.slice(-8);
-
-
-    if (
-        moves.length === 0
-    ) {
-
-        return randomMove();
-
+    if (data.moves.length < 2) {
+        return weightedChoice();
     }
-
-
-    let prediction =
-        weightedChoice(moves);
-
 
     const last =
-        moves[moves.length - 1];
+        data.moves[data.moves.length - 1];
 
+    const transitions = {
+        rock: [],
+        paper: [],
+        scissors: []
+    };
 
-    // Phân tích pattern
+    for (let i = 0; i < data.moves.length - 1; i++) {
 
-    if (
-        moves.length >= 3
-    ) {
+        if (data.moves[i] === last) {
 
-        const transitions = {
-
-            rock: {
-                rock: 0,
-                paper: 0,
-                scissors: 0
-            },
-
-            paper: {
-                rock: 0,
-                paper: 0,
-                scissors: 0
-            },
-
-            scissors: {
-                rock: 0,
-                paper: 0,
-                scissors: 0
-            }
-
-        };
-
-
-        for (
-            let i = 0;
-
-            i < moves.length - 1;
-
-            i++
-        ) {
-
-            transitions[
-                moves[i]
-            ][
-                moves[i + 1]
-            ]++;
-
+            transitions[last].push(
+                data.moves[i + 1]
+            );
         }
-
-
-        const current =
-            transitions[last];
-
-
-        const best =
-            Object.keys(current)
-
-            .sort(
-                (a, b) =>
-                    current[b] -
-                    current[a]
-            )[0];
-
-
-        if (
-            current[best] > 0 &&
-            Math.random() < 0.65
-        ) {
-
-            prediction =
-                best;
-
-        }
-
     }
 
+    if (transitions[last].length === 0) {
+        return weightedChoice();
+    }
 
-    return prediction;
+    const list =
+        transitions[last];
 
+    return list[
+        Math.floor(Math.random() * list.length)
+    ];
 }
 
 
-// ===============================
-// CPU AI
-// ===============================
+function cpuMove() {
 
-function cpuMove(level) {
+    const difficulty =
+        difficultyEl.value;
 
-    // EASY
+    if (difficulty === "easy") {
+        return randomMove();
+    }
 
-    if (
-        level === "easy"
-    ) {
+    if (difficulty === "normal") {
+
+        if (Math.random() < 0.65) {
+
+            const prediction =
+                predictPlayer();
+
+            return beats[prediction];
+        }
 
         return randomMove();
-
     }
 
+    if (difficulty === "hard") {
 
-    // NORMAL
+        if (Math.random() < 0.78) {
 
-    if (
-        level === "normal"
-    ) {
+            const prediction =
+                predictPlayer();
 
-        return Math.random() < 0.65
+            return beats[prediction];
+        }
 
-            ? randomMove()
-
-            : beats[
-                predictPlayer()
-            ];
-
+        return randomMove();
     }
 
+    // CAPA AI
 
-    // HARD
+    if (Math.random() < 0.90) {
 
-    if (
-        level === "hard"
-    ) {
+        const prediction =
+            predictPlayer();
 
-        return Math.random() < 0.78
-
-            ? beats[
-                predictPlayer()
-            ]
-
-            : randomMove();
-
+        return beats[prediction];
     }
 
-
-    // CAPA
-
-    return Math.random() < 0.90
-
-        ? beats[
-            predictPlayer()
-        ]
-
-        : randomMove();
-
+    return randomMove();
 }
 
 
-// ===============================
-// RESULT
-// ===============================
+/* =========================================
+   RESULT
+   ========================================= */
 
-function getResult(
-    player,
-    cpu
-) {
+function getResult(player, cpu) {
 
-    if (
-        player === cpu
-    ) {
-
+    if (player === cpu) {
         return "draw";
-
     }
 
-
-    if (
-        beats[player] === cpu
-    ) {
-
+    if (beats[player] === cpu) {
         return "win";
-
     }
-
 
     return "lose";
-
 }
 
 
-// ===============================
-// UPDATE BOARD
-// ===============================
+/* =========================================
+   UPDATE BOARD
+   ========================================= */
 
 function updateBoard() {
 
-    $("playerScore")
-        .textContent =
+    playerScoreEl.textContent =
         playerScore;
 
-
-    $("cpuScore")
-        .textContent =
+    cpuScoreEl.textContent =
         cpuScore;
 
+    roundText.textContent =
+        `ROUND ${round}`;
 
     const mode =
-        $("mode").value;
+        modeEl.value;
 
+    let target = 2;
 
-    let target;
-
-
-    if (
-        mode === "bo3"
-    ) {
-
-        target = 2;
-
-    }
-
-    else if (
-        mode === "bo5"
-    ) {
-
+    if (mode === "bo5") {
         target = 3;
-
     }
 
-    else {
-
+    if (mode === "survival") {
         target = 5;
-
     }
 
-
-    let progress;
-
-
-    if (
-        mode === "survival"
-    ) {
-
-        progress =
-            ((round - 1) /
-            target) *
-            100;
-
-    }
-
-    else {
-
-        progress =
-
-            Math.max(
-                playerScore,
-                cpuScore
-            )
-            / target
-            * 100;
-
-    }
-
-
-    $("progressBar")
-        .style.width =
+    const progress =
         Math.min(
             100,
-            progress
-        ) + "%";
+            ((playerScore + cpuScore) / target) * 100
+        );
 
+    progressBar.style.width =
+        progress + "%";
 
-    if (
-        mode === "survival"
-    ) {
+    if (mode === "bo3") {
 
-        $("roundText")
-            .textContent =
-            `Survival • Round ${round}`;
+        progressText.textContent =
+            "BO3 • FIRST TO 2";
+
+    } else if (mode === "bo5") {
+
+        progressText.textContent =
+            "BO5 • FIRST TO 3";
+
+    } else {
+
+        progressText.textContent =
+            "SURVIVAL • WIN 5";
 
     }
 
-    else {
+    streakEl.textContent =
+        data.streak;
 
-        $("roundText")
-            .textContent =
-            `Round ${round}`;
+    winsEl.textContent =
+        data.wins;
 
-    }
+    lossesEl.textContent =
+        data.losses;
 
+    drawsEl.textContent =
+        data.draws;
+
+    renderProfile();
 }
 
 
-// ===============================
-// PLAYER CHOICE
-// ===============================
+/* =========================================
+   CHOOSE MOVE
+   ========================================= */
 
-function choose(player) {
+function choose(playerChoice) {
 
-    if (locked) {
-
+    if (locked || matchFinished) {
         return;
-
     }
-
 
     locked = true;
 
+    const cpuChoice =
+        cpuMove();
 
-    const difficulty =
-        $("difficulty").value;
+    data.moves.push(playerChoice);
 
-
-    const cpu =
-        cpuMove(
-            difficulty
-        );
-
-
-    const result =
-        getResult(
-            player,
-            cpu
-        );
-
-
-    // SAVE PLAYER MOVE
-
-    data.moves.push(
-        player
-    );
-
-
-    if (
-        data.moves.length > 30
-    ) {
-
+    if (data.moves.length > 30) {
         data.moves.shift();
-
     }
 
+    playerMoveEl.textContent =
+        icons[playerChoice];
 
-    // DISPLAY
+    cpuMoveEl.textContent =
+        icons[cpuChoice];
 
-    $("playerMove")
-        .textContent =
-        icons[player];
+    playerMoveEl.classList.remove("animate");
+    cpuMoveEl.classList.remove("animate");
 
+    void playerMoveEl.offsetWidth;
 
-    $("cpuMove")
-        .textContent =
-        icons[cpu];
+    playerMoveEl.classList.add("animate");
+    cpuMoveEl.classList.add("animate");
 
+    const result =
+        getResult(playerChoice, cpuChoice);
 
-    $("result")
-        .textContent =
-
-        result === "win"
-
-            ? "YOU WIN"
-
-            : result === "lose"
-
-            ? "CAPA WINS"
-
-            : "DRAW";
-
-
-    $("result").className =
-        "result " + result;
-
-
-    // WIN
-
-    if (
-        result === "win"
-    ) {
+    if (result === "win") {
 
         playerScore++;
 
         data.streak++;
 
-
         data.bestStreak =
-
             Math.max(
-
                 data.bestStreak,
-
                 data.streak
-
             );
 
+        resultEl.textContent =
+            "🏆 YOU WIN";
+
+        resultEl.className =
+            "result win";
+
+        messageEl.textContent =
+            `${names[playerChoice]} thắng ${names[cpuChoice]} • +20 XP`;
+
+        statusEl.textContent =
+            "WIN";
 
         addXP(20);
 
-
-        $("message")
-            .textContent =
-
-            `Bạn thắng!
-             ${names[player]}
-             thắng
-             ${names[cpu]}.`;
-
-    }
-
-
-    // LOSE
-
-    else if (
-        result === "lose"
-    ) {
+    } else if (result === "lose") {
 
         cpuScore++;
 
         data.streak = 0;
 
+        resultEl.textContent =
+            "💀 YOU LOSE";
 
-        addXP(5);
+        resultEl.className =
+            "result lose";
 
+        messageEl.textContent =
+            `${names[cpuChoice]} thắng ${names[playerChoice]}`;
 
-        $("message")
-            .textContent =
+        statusEl.textContent =
+            "LOSS";
 
-            `CAPA thắng bằng
-             ${names[cpu]}.`;
-
-    }
-
-
-    // DRAW
-
-    else {
+    } else {
 
         data.draws++;
 
+        resultEl.textContent =
+            "🤝 DRAW";
 
-        $("message")
-            .textContent =
+        resultEl.className =
+            "result draw";
 
-            "Hai bên chọn giống nhau.";
+        messageEl.textContent =
+            "Hai bên chọn cùng một nước";
 
+        statusEl.textContent =
+            "DRAW";
     }
 
+    saveData();
 
     updateBoard();
 
-    setTimeout(
+    setTimeout(() => {
 
-        () => {
+        if (checkMatchEnd()) {
+            return;
+        }
 
-            nextRound(
-                result
-            );
+        round++;
 
-        },
+        locked = false;
 
-        650
+        playerMoveEl.textContent = "?";
+        cpuMoveEl.textContent = "?";
 
-    );
+        resultEl.textContent =
+            "CHOOSE YOUR MOVE";
 
+        resultEl.className =
+            "result";
+
+        messageEl.textContent =
+            "CAPA đang chờ nước đi của bạn...";
+
+        statusEl.textContent =
+            "READY";
+
+        updateBoard();
+
+    }, 850);
 }
 
 
-// ===============================
-// NEXT ROUND
-// ===============================
+/* =========================================
+   CHECK MATCH
+   ========================================= */
 
-function nextRound(
-    result
-) {
+function checkMatchEnd() {
 
     const mode =
-        $("mode").value;
+        modeEl.value;
 
+    let target = 2;
 
-    let target;
-
-
-    if (
-        mode === "bo3"
-    ) {
-
-        target = 2;
-
-    }
-
-    else if (
-        mode === "bo5"
-    ) {
-
+    if (mode === "bo5") {
         target = 3;
-
     }
 
-    else {
+    if (mode === "survival") {
 
-        target = 5;
+        if (playerScore >= 5) {
+            finishMatch("win");
+            return true;
+        }
 
+        if (cpuScore >= 1) {
+            finishMatch("lose");
+            return true;
+        }
+
+        return false;
     }
-
-
-    // SURVIVAL
 
     if (
-        mode === "survival"
+        playerScore >= target ||
+        cpuScore >= target
     ) {
 
-        if (
-            result === "lose"
-        ) {
-
-            finishMatch(
-                "lose"
-            );
-
-            return;
-
+        if (playerScore > cpuScore) {
+            finishMatch("win");
+        } else {
+            finishMatch("lose");
         }
 
-
-        round++;
-
-
-        if (
-            round > 5
-        ) {
-
-            data.achievements
-                .survival = true;
-
-
-            finishMatch(
-                "win"
-            );
-
-            return;
-
-        }
-
+        return true;
     }
 
-
-    // BO3 / BO5
-
-    else {
-
-        if (
-            playerScore >= target ||
-            cpuScore >= target
-        ) {
-
-            finishMatch(
-
-                playerScore >
-                cpuScore
-
-                    ? "win"
-
-                    : "lose"
-
-            );
-
-            return;
-
-        }
-
-
-        round++;
-
-    }
-
-
-    locked = false;
-
-    updateBoard();
-
-    save();
-
-    renderProfile();
-
+    return false;
 }
 
 
-// ===============================
-// FINISH MATCH
-// ===============================
+/* =========================================
+   FINISH MATCH
+   ========================================= */
 
-function finishMatch(
-    result
-) {
+function finishMatch(result) {
 
-    locked = true;
+    matchFinished = true;
 
+    let xp = 0;
 
-    if (
-        result === "win"
-    ) {
+    if (result === "win") {
 
         data.wins++;
 
+        xp = 60;
 
-        if (
-            $("difficulty").value
-            === "capa"
-        ) {
-
-            data.achievements
-                .capa = true;
-
+        if (modeEl.value === "survival") {
+            xp += 100;
         }
 
+        resultEl.textContent =
+            "🏆 MATCH VICTORY";
 
-        addXP(60);
+        resultEl.className =
+            "result win";
 
-    }
+        messageEl.textContent =
+            `Bạn đã thắng trận! +${xp} XP`;
 
-    else {
+        statusEl.textContent =
+            "VICTORY";
+
+    } else {
 
         data.losses++;
 
-        addXP(10);
+        xp = 10;
 
+        resultEl.textContent =
+            "💀 MATCH DEFEAT";
+
+        resultEl.className =
+            "result lose";
+
+        messageEl.textContent =
+            `Trận đấu kết thúc. +${xp} XP`;
+
+        statusEl.textContent =
+            "DEFEAT";
     }
 
-
-    // HISTORY
-
-    data.history.unshift({
-
-        mode:
-            $("mode")
-            .value
-            .toUpperCase(),
-
-        difficulty:
-            $("difficulty")
-            .value
-            .toUpperCase(),
+    const historyItem = {
 
         result:
             result === "win"
+                ? "WIN"
+                : "LOSS",
 
-                ? "🏆 WIN"
+        mode:
+            modeEl.value,
 
-                : "💀 LOSS"
+        difficulty:
+            difficultyEl.value,
 
-    });
+        player:
+            playerScore,
 
+        cpu:
+            cpuScore,
 
-    // Chỉ giữ 20 trận
+        xp:
+            xp,
 
-    data.history =
-        data.history.slice(
-            0,
-            20
-        );
+        time:
+            Date.now()
+    };
 
+    data.history.push(historyItem);
 
-    save();
-
-    renderProfile();
-
-
-    if (
-        result === "win"
-    ) {
-
-        $("status")
-            .textContent =
-            "🏆 BẠN THẮNG TRẬN!";
-
-
-        $("message")
-            .textContent =
-            "Tuyệt vời! Bạn đã đánh bại CAPA.";
-
+    if (data.history.length > 50) {
+        data.history.shift();
     }
 
-    else {
+    addXP(xp);
 
-        $("status")
-            .textContent =
-            "💀 CAPA THẮNG TRẬN!";
+    saveData();
 
+    renderAchievements();
+    renderHistory();
+    updateBoard();
 
-        $("message")
-            .textContent =
-            "CAPA đã đọc được chiến thuật của bạn.";
+    setTimeout(() => {
 
-    }
+        if (result === "win") {
 
+            showToast(
+                "🏆 Victory! Bạn đã chiến thắng!"
+            );
+
+        } else {
+
+            showToast(
+                "💀 Match Over!"
+            );
+        }
+
+    }, 300);
 }
 
 
-// ===============================
-// RESET GAME
-// ===============================
+/* =========================================
+   RESET GAME
+   ========================================= */
 
 function resetGame() {
 
     playerScore = 0;
-
     cpuScore = 0;
 
     round = 1;
 
     locked = false;
+    matchFinished = false;
 
+    playerMoveEl.textContent = "?";
+    cpuMoveEl.textContent = "?";
 
-    $("playerMove")
-        .textContent = "?";
+    resultEl.textContent =
+        "CHOOSE YOUR MOVE";
 
+    resultEl.className =
+        "result";
 
-    $("cpuMove")
-        .textContent = "?";
+    messageEl.textContent =
+        "CAPA đang chờ nước đi của bạn...";
 
-
-    $("result")
-        .textContent = "READY";
-
-
-    $("result")
-        .className = "result";
-
-
-    $("status")
-        .textContent =
-        "Chọn một nước đi";
-
-
-    $("message")
-        .textContent =
-        "Chọn Búa, Bao hoặc Kéo để bắt đầu.";
-
+    statusEl.textContent =
+        "READY";
 
     updateBoard();
 
 }
 
 
-// ===============================
-// BUTTON EVENTS
-// ===============================
+/* =========================================
+   BUTTONS
+   ========================================= */
 
-document
-    .querySelectorAll(
-        ".choice"
-    )
-    .forEach(
+document.querySelectorAll(".choice")
+    .forEach(button => {
 
-        button => {
+        button.addEventListener(
+            "click",
+            () => {
 
-            button.addEventListener(
+                choose(
+                    button.dataset.choice
+                );
 
-                "click",
+            }
+        );
 
-                () => {
-
-                    choose(
-                        button
-                            .dataset
-                            .choice
-                    );
-
-                }
-
-            );
-
-        }
-
-    );
+    });
 
 
-// ===============================
-// RESET BUTTON
-// ===============================
-
-$("resetBtn")
+document.getElementById("resetBtn")
     .addEventListener(
-
         "click",
-
         resetGame
-
     );
 
 
-// ===============================
-// KEYBOARD
-// ===============================
-
-document.addEventListener(
-
-    "keydown",
-
-    event => {
-
-        if (
-            event.key === "1"
-        ) {
-
-            choose("rock");
-
-        }
-
-
-        if (
-            event.key === "2"
-        ) {
-
-            choose("paper");
-
-        }
-
-
-        if (
-            event.key === "3"
-        ) {
-
-            choose("scissors");
-
-        }
-
-    }
-
+modeEl.addEventListener(
+    "change",
+    resetGame
 );
 
 
-// ===============================
-// MODE CHANGE
-// ===============================
-
-$("mode")
-    .addEventListener(
-
-        "change",
-
-        resetGame
-
-    );
+difficultyEl.addEventListener(
+    "change",
+    resetGame
+);
 
 
-// ===============================
-// DIFFICULTY CHANGE
-// ===============================
+/* =========================================
+   KEYBOARD
+   ========================================= */
 
-$("difficulty")
-    .addEventListener(
+document.addEventListener(
+    "keydown",
+    event => {
 
-        "change",
+        if (
+            event.target.tagName === "INPUT" ||
+            event.target.tagName === "SELECT"
+        ) {
+            return;
+        }
 
-        resetGame
+        if (event.key === "1") {
+            choose("rock");
+        }
 
-    );
+        if (event.key === "2") {
+            choose("paper");
+        }
+
+        if (event.key === "3") {
+            choose("scissors");
+        }
+
+    }
+);
 
 
-// ===============================
-// START
-// ===============================
+/* =========================================
+   START
+   ========================================= */
 
 renderProfile();
-
+renderAchievements();
+renderHistory();
 updateBoard();
+```
