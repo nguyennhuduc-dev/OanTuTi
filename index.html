@@ -1,220 +1,422 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090d1b">
-  <title>Neon Arena 2.1 | Oẳn Tù Tì</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="./style.css?v=21">
-  <script src="./script.js?v=21" defer></script>
+    <title>Oẳn Tù Tì CAPA</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div class="ambient ambient-one"></div>
-  <div class="ambient ambient-two"></div>
-  <div id="celebration"></div>
 
-  <main class="app-shell">
+    <div class="background"></div>
+
+    <!-- HEADER -->
     <header class="topbar">
-      <a class="brand" href="./">
-        <span class="brand-mark">✊</span>
-        <span>
-          <strong>NEON ARENA</strong>
-          <small>ROCK · PAPER · SCISSORS</small>
-        </span>
-      </a>
 
-      <div class="topbar-right">
-        <span class="live-dot"></span>
-        <span id="statusLabel">SẴN SÀNG</span>
-        <button class="icon-button" id="soundBtn" type="button"
-          aria-label="Bật hoặc tắt âm thanh">🔇</button>
-      </div>
+        <div>
+            <h1>⚡ OẲN TÙ TÌ <span>CAPA</span></h1>
+            <p>Adaptive AI • Rank • XP • Achievements</p>
+        </div>
+
+        <div class="profile">
+
+            <strong id="rankName">
+                Bronze Rookie
+            </strong>
+
+            <span>
+                Lv.<b id="level">1</b>
+            </span>
+
+            <div class="xp-box">
+                <div id="xpBar"></div>
+            </div>
+
+            <small id="xpText">
+                0 / 100 XP
+            </small>
+
+        </div>
+
     </header>
 
-    <section class="hero">
-      <div class="eyebrow">✦ YOUR NEXT CHALLENGE ✦</div>
-      <h1>THẮNG BẰNG <span>CHIẾN THUẬT.</span></h1>
-      <p>Đọc vị đối thủ. Chọn đúng thời điểm. Làm chủ đấu trường.</p>
-    </section>
 
-    <section class="panel game-panel">
-      <div class="panel-heading">
-        <div>
-          <span class="section-kicker">01 / ĐẤU TRƯỜNG</span>
-          <h2>Trận đấu của bạn</h2>
-        </div>
-        <div class="round-pill">VÁN <strong id="roundNumber">1</strong></div>
-      </div>
+    <main class="container">
 
-      <div class="settings-row">
-        <label class="setting-control">
-          CHẾ ĐỘ
-          <select id="modeSelect">
-            <option value="3">BO3 · Thắng 2 ván</option>
-            <option value="5">BO5 · Thắng 3 ván</option>
-          </select>
-        </label>
+        <!-- GAME CONFIG -->
+        <section class="card hero">
 
-        <label class="setting-control">
-          ĐỘ KHÓ
-          <select id="difficultySelect">
-            <option value="easy">Dễ · Ngẫu nhiên</option>
-            <option value="normal" selected>Thường · Cân bằng</option>
-            <option value="hard">Khó · Đọc thói quen</option>
-          </select>
-        </label>
-      </div>
+            <div>
 
-      <div class="scoreboard">
-        <article class="contestant">
-          <div class="contestant-label">
-            <span class="player-dot"></span>
-            BẠN
-          </div>
-          <div class="hand-frame player-frame">
-            <span class="hand" id="playerHand">✊</span>
-          </div>
-          <div class="score" id="playerScore">0</div>
-          <div class="score-caption">ĐIỂM CỦA BẠN</div>
-        </article>
+                <span class="badge">
+                    CAPA MODE
+                </span>
 
-        <div class="versus"><span>VS</span></div>
+                <h2>
+                    Thách đấu AI thích nghi
+                </h2>
 
-        <article class="contestant">
-          <div class="contestant-label">
-            <span class="cpu-dot"></span>
-            MÁY TÍNH
-          </div>
-          <div class="hand-frame cpu-frame">
-            <span class="hand" id="cpuHand">🤖</span>
-          </div>
-          <div class="score cpu-score" id="cpuScore">0</div>
-          <div class="score-caption">ĐIỂM ĐỐI THỦ</div>
-        </article>
-      </div>
+                <p>
+                    AI sẽ phân tích các nước đi gần đây
+                    của bạn và thay đổi chiến thuật.
+                </p>
 
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span>TIẾN ĐỘ TRẬN ĐẤU</span>
-          <span id="progressText">0 / 2 điểm</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-      </div>
+            </div>
 
-      <div class="result-box" id="resultBox" aria-live="polite">
-        <span class="result-symbol" id="resultSymbol">⚡</span>
-        <div>
-          <strong id="resultTitle">Sẵn sàng chiến đấu?</strong>
-          <p id="resultDetail">Chọn một biểu tượng để bắt đầu.</p>
-        </div>
-      </div>
 
-      <div class="choices-heading">
-        <span>02 / CHỌN NƯỚC ĐI</span>
-        <small>Chọn Búa, Bao hoặc Kéo</small>
-      </div>
+            <div class="controls">
 
-      <div class="choices">
-        <button class="choice" type="button" data-choice="rock">
-          <span class="choice-emoji">✊</span>
-          <strong>BÚA</strong>
-          <small>Đập tan phòng thủ</small>
-          <kbd>1</kbd>
-        </button>
+                <label>
+                    Chế độ
 
-        <button class="choice" type="button" data-choice="paper">
-          <span class="choice-emoji">✋</span>
-          <strong>BAO</strong>
-          <small>Kiểm soát thế trận</small>
-          <kbd>2</kbd>
-        </button>
+                    <select id="mode">
 
-        <button class="choice" type="button" data-choice="scissors">
-          <span class="choice-emoji">✌️</span>
-          <strong>KÉO</strong>
-          <small>Ra đòn bất ngờ</small>
-          <kbd>3</kbd>
-        </button>
-      </div>
+                        <option value="bo3">
+                            BO3
+                        </option>
 
-      <div class="game-actions">
-        <button class="button button-primary" id="resetBtn" type="button">
-          ↻ TRẬN MỚI
-        </button>
-        <button class="button button-quiet" id="clearBtn" type="button">
-          XÓA THỐNG KÊ
-        </button>
-      </div>
+                        <option value="bo5">
+                            BO5
+                        </option>
 
-      <p class="keyboard-hint">Mẹo: Nhấn phím 1, 2, 3 để chọn nhanh.</p>
-    </section>
+                        <option value="survival">
+                            SURVIVAL
+                        </option>
 
-    <section class="stats-section">
-      <div class="section-title-row">
-        <div>
-          <span class="section-kicker">03 / PHONG ĐỘ</span>
-          <h2>Thống kê của bạn</h2>
-        </div>
-        <span class="saved-tag">● TỰ ĐỘNG LƯU</span>
-      </div>
+                    </select>
 
-      <div class="stats-grid">
-        <article class="stat-card">
-          <span class="stat-icon win-icon">↗</span>
-          <span class="stat-label">TRẬN THẮNG</span>
-          <strong id="wins">0</strong>
-          <small>Tổng trận đã thắng</small>
-        </article>
+                </label>
 
-        <article class="stat-card">
-          <span class="stat-icon loss-icon">↘</span>
-          <span class="stat-label">TRẬN THUA</span>
-          <strong id="losses">0</strong>
-          <small>Tổng trận đã thua</small>
-        </article>
 
-        <article class="stat-card">
-          <span class="stat-icon rate-icon">％</span>
-          <span class="stat-label">TỈ LỆ THẮNG</span>
-          <strong id="winRate">0%</strong>
-          <small>Trên tổng trận hoàn tất</small>
-        </article>
+                <label>
+                    AI
 
-        <article class="stat-card">
-          <span class="stat-icon streak-icon">⚡</span>
-          <span class="stat-label">CHUỖI THẮNG TỐT NHẤT</span>
-          <strong id="bestStreak">0</strong>
-          <small>Trận thắng liên tiếp</small>
-        </article>
-      </div>
-    </section>
+                    <select id="difficulty">
 
-    <section class="panel history-section">
-      <div class="section-title-row">
-        <div>
-          <span class="section-kicker">04 / NHẬT KÝ</span>
-          <h2>Lịch sử gần đây</h2>
-        </div>
-        <button class="text-button" id="clearHistoryBtn" type="button">
-          Xóa lịch sử
-        </button>
-      </div>
+                        <option value="easy">
+                            Easy
+                        </option>
 
-      <div class="history-list" id="historyList">
-        <div class="empty-history">🎮 Lịch sử sẽ xuất hiện tại đây.</div>
-      </div>
-    </section>
+                        <option value="normal" selected>
+                            Normal
+                        </option>
 
-    <footer>
-      <span class="footer-mark">✦</span>
-      NEON ARENA
-      <span class="footer-divider">/</span>
-      HTML · CSS · JavaScript
-      <span class="footer-year">2026</span>
-    </footer>
-  </main>
+                        <option value="hard">
+                            Hard
+                        </option>
+
+                        <option value="capa">
+                            CAPA AI
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <button id="resetBtn">
+                    ↻ Trận mới
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- SCORE -->
+        <section class="score-grid">
+
+            <div class="card score">
+
+                <span>
+                    BẠN
+                </span>
+
+                <strong id="playerScore">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="vs">
+                VS
+            </div>
+
+
+            <div class="card score">
+
+                <span>
+                    CAPA
+                </span>
+
+                <strong id="cpuScore">
+                    0
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- GAME -->
+        <section class="card game">
+
+            <div class="round">
+
+                <span id="roundText">
+                    Round 1
+                </span>
+
+                <span id="status">
+                    Chọn một nước đi
+                </span>
+
+            </div>
+
+
+            <div class="progress">
+
+                <div id="progressBar"></div>
+
+            </div>
+
+
+            <!-- CHOICES -->
+            <div class="choices">
+
+                <button
+                    class="choice"
+                    data-choice="rock">
+
+                    <span>
+                        ✊
+                    </span>
+
+                    <b>
+                        BÚA
+                    </b>
+
+                    <small>
+                        1
+                    </small>
+
+                </button>
+
+
+                <button
+                    class="choice"
+                    data-choice="paper">
+
+                    <span>
+                        ✋
+                    </span>
+
+                    <b>
+                        BAO
+                    </b>
+
+                    <small>
+                        2
+                    </small>
+
+                </button>
+
+
+                <button
+                    class="choice"
+                    data-choice="scissors">
+
+                    <span>
+                        ✌️
+                    </span>
+
+                    <b>
+                        KÉO
+                    </b>
+
+                    <small>
+                        3
+                    </small>
+
+                </button>
+
+            </div>
+
+
+            <!-- BATTLE -->
+            <div class="battle">
+
+                <div>
+
+                    <small>
+                        BẠN
+                    </small>
+
+                    <strong id="playerMove">
+                        ?
+                    </strong>
+
+                </div>
+
+
+                <div
+                    class="result"
+                    id="result">
+
+                    READY
+
+                </div>
+
+
+                <div>
+
+                    <small>
+                        CAPA
+                    </small>
+
+                    <strong id="cpuMove">
+                        ?
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <p
+                class="message"
+                id="message">
+
+                Chọn Búa, Bao hoặc Kéo để bắt đầu.
+
+            </p>
+
+        </section>
+
+
+        <!-- STATS -->
+        <section class="stats-grid">
+
+            <div class="card stat">
+
+                <span>
+                    🔥 Streak
+                </span>
+
+                <b id="streak">
+                    0
+                </b>
+
+            </div>
+
+
+            <div class="card stat">
+
+                <span>
+                    🏆 Wins
+                </span>
+
+                <b id="wins">
+                    0
+                </b>
+
+            </div>
+
+
+            <div class="card stat">
+
+                <span>
+                    💥 Losses
+                </span>
+
+                <b id="losses">
+                    0
+                </b>
+
+            </div>
+
+
+            <div class="card stat">
+
+                <span>
+                    🤝 Draws
+                </span>
+
+                <b id="draws">
+                    0
+                </b>
+
+            </div>
+
+
+            <div class="card stat">
+
+                <span>
+                    ⭐ XP
+                </span>
+
+                <b id="totalXp">
+                    0
+                </b>
+
+            </div>
+
+        </section>
+
+
+        <!-- LOWER -->
+        <section class="lower">
+
+            <!-- ACHIEVEMENTS -->
+            <div class="card">
+
+                <h3>
+                    🏅 Thành tích
+                </h3>
+
+                <div
+                    id="achievements"
+                    class="achievements">
+
+                </div>
+
+            </div>
+
+
+            <!-- HISTORY -->
+            <div class="card">
+
+                <h3>
+                    📜 Lịch sử
+                </h3>
+
+                <div
+                    id="history"
+                    class="history">
+
+                    Chưa có trận đấu.
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <div
+        id="toast"
+        class="toast">
+
+    </div>
+
+
+    <script src="script.js"></script>
+
 </body>
 </html>
