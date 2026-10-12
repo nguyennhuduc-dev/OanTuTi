@@ -1,303 +1,411 @@
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Oẳn Tù Tì CAPA</title>
+    <title>Oẳn Tù Tì — CAPA Arena</title>
 
-    <link rel="stylesheet" href="style.css?v=30">
+    <link rel="stylesheet" href="style.css?v=40">
 </head>
 
 <body>
 
-    <div class="background">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="grid"></div>
+<div class="bg">
+    <div class="stars"></div>
+    <div class="glow glow-blue"></div>
+    <div class="glow glow-purple"></div>
+    <div class="scan"></div>
+</div>
+
+
+<header class="header">
+
+    <div class="brand">
+        <div class="brand-icon">⚡</div>
+
+        <div>
+            <h1>OẲN TÙ TÌ</h1>
+            <p>CAPA <span>ARENA</span></p>
+        </div>
     </div>
 
-    <header class="topbar">
 
-        <div class="logo">
-            <div class="logo-icon">⚡</div>
-            <div>
-                <h1>OẲN TÙ TÌ</h1>
-                <span>CAPA ARENA</span>
-            </div>
+    <div class="profile">
+
+        <div class="rank">
+            <small>RANK</small>
+            <strong id="rankName">BRONZE</strong>
         </div>
 
-        <div class="profile">
-
-            <div class="rank-box">
-                <span class="rank-label">RANK</span>
-                <strong id="rankName">BRONZE</strong>
+        <div class="level">
+            <div class="level-circle">
+                <span>LV</span>
+                <b id="level">1</b>
             </div>
 
-            <div class="level-box">
-                <div class="level-number">
-                    LV <strong id="level">1</strong>
-                </div>
-
-                <div class="xp-area">
-                    <div class="xp-bar">
-                        <div id="xpBar"></div>
-                    </div>
-
+            <div class="xp">
+                <div class="xp-top">
+                    <span>EXPERIENCE</span>
                     <span id="xpText">0 / 100 XP</span>
                 </div>
+
+                <div class="xp-track">
+                    <div id="xpBar"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+    <!-- CONTROL BAR -->
+
+    <section class="control glass">
+
+        <div class="control-item">
+            <label>MODE</label>
+
+            <select id="mode">
+                <option value="bo3">BO3 — FIRST TO 2</option>
+                <option value="bo5">BO5 — FIRST TO 3</option>
+                <option value="survival">SURVIVAL — 5 WINS</option>
+            </select>
+        </div>
+
+
+        <div class="control-item">
+            <label>AI</label>
+
+            <select id="difficulty">
+                <option value="easy">EASY</option>
+                <option value="normal">NORMAL</option>
+                <option value="hard">HARD</option>
+                <option value="capa">CAPA AI</option>
+            </select>
+        </div>
+
+
+        <button id="resetBtn" class="reset">
+            ↻
+            <span>NEW MATCH</span>
+        </button>
+
+    </section>
+
+
+    <!-- MATCH HEADER -->
+
+    <section class="match-head">
+
+        <div>
+            <span class="eyebrow">⚔ CAPA BATTLE ARENA</span>
+            <h2>READY FOR BATTLE?</h2>
+        </div>
+
+        <div class="online">
+            <i></i>
+            ONLINE
+        </div>
+
+    </section>
+
+
+    <!-- SCORE -->
+
+    <section class="score glass">
+
+        <div class="fighter player">
+
+            <div class="avatar player-avatar">
+                👤
+            </div>
+
+            <div class="fighter-name">
+                <small>PLAYER</small>
+                <strong id="playerScore">0</strong>
             </div>
 
         </div>
 
-    </header>
 
+        <div class="score-center">
 
-    <main class="container">
+            <span class="round" id="roundText">
+                ROUND 1
+            </span>
 
-        <!-- CONFIG -->
-        <section class="config card">
-
-            <div class="config-item">
-                <span>GAME MODE</span>
-
-                <select id="mode">
-                    <option value="bo3">BO3</option>
-                    <option value="bo5">BO5</option>
-                    <option value="survival">SURVIVAL</option>
-                </select>
+            <div class="versus">
+                <span>V</span>
+                <span>S</span>
             </div>
 
-            <div class="config-item">
-                <span>AI DIFFICULTY</span>
+            <small id="status">READY</small>
 
-                <select id="difficulty">
-                    <option value="easy">Easy</option>
-                    <option value="normal">Normal</option>
-                    <option value="hard">Hard</option>
-                    <option value="capa">CAPA AI</option>
-                </select>
+        </div>
+
+
+        <div class="fighter cpu">
+
+            <div class="fighter-name">
+                <small>CAPA AI</small>
+                <strong id="cpuScore">0</strong>
             </div>
 
-            <button id="resetBtn" class="reset-btn">
-                ↻ RESET
+            <div class="avatar cpu-avatar">
+                🤖
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MATCH PROGRESS -->
+
+    <section class="match-progress">
+
+        <div class="progress-info">
+            <span id="progressText">BO3 • FIRST TO 2</span>
+            <span>BATTLE PROGRESS</span>
+        </div>
+
+        <div class="progress-track">
+            <div id="progressBar"></div>
+        </div>
+
+    </section>
+
+
+    <!-- ARENA -->
+
+    <section class="arena glass">
+
+        <div class="arena-top">
+
+            <span>YOUR MOVE</span>
+
+            <div class="energy">
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+            </div>
+
+            <span>CAPA MOVE</span>
+
+        </div>
+
+
+        <div class="battle">
+
+            <div class="move-side">
+
+                <div id="playerMove" class="move-card player-move">
+                    ?
+                </div>
+
+                <small>PLAYER</small>
+
+            </div>
+
+
+            <div class="vs-large">
+                <span>VS</span>
+            </div>
+
+
+            <div class="move-side">
+
+                <div id="cpuMove" class="move-card cpu-move">
+                    ?
+                </div>
+
+                <small>CAPA</small>
+
+            </div>
+
+        </div>
+
+
+        <div id="result" class="result">
+            CHOOSE YOUR MOVE
+        </div>
+
+        <div id="message" class="message">
+            CAPA đang phân tích nước đi của bạn...
+        </div>
+
+
+        <!-- CHOICES -->
+
+        <div class="choices">
+
+            <button class="choice rock" data-choice="rock">
+
+                <span class="choice-number">01</span>
+
+                <div class="choice-icon">🪨</div>
+
+                <div class="choice-text">
+                    <strong>ROCK</strong>
+                    <small>ĐÁ</small>
+                </div>
+
             </button>
 
-        </section>
 
+            <button class="choice paper" data-choice="paper">
 
-        <!-- SCORE -->
-        <section class="scoreboard card">
+                <span class="choice-number">02</span>
 
-            <div class="fighter player">
+                <div class="choice-icon">📄</div>
 
-                <div class="fighter-avatar">
-                    👤
-                </div>
-
-                <div class="fighter-info">
-                    <span>PLAYER</span>
-                    <strong id="playerScore">0</strong>
-                </div>
-
-            </div>
-
-            <div class="vs">
-                <span>VS</span>
-                <small id="roundText">ROUND 1</small>
-            </div>
-
-            <div class="fighter cpu">
-
-                <div class="fighter-info">
-                    <span>CAPA AI</span>
-                    <strong id="cpuScore">0</strong>
-                </div>
-
-                <div class="fighter-avatar">
-                    🤖
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- PROGRESS -->
-        <section class="progress-section">
-
-            <div class="progress-info">
-                <span id="progressText">BO3 • FIRST TO 2</span>
-                <span id="status">READY</span>
-            </div>
-
-            <div class="match-progress">
-                <div id="progressBar"></div>
-            </div>
-
-        </section>
-
-
-        <!-- BATTLE -->
-        <section class="battle card">
-
-            <div class="battle-header">
-                <span class="section-tag">⚔ BATTLE ARENA</span>
-                <span class="live">
-                    <i></i> LIVE
-                </span>
-            </div>
-
-
-            <div class="fighters-display">
-
-                <div class="move-display player-display">
-
-                    <div class="display-label">YOUR MOVE</div>
-
-                    <div id="playerMove" class="big-move">
-                        ?
-                    </div>
-
-                </div>
-
-
-                <div class="battle-vs">
-                    <div class="energy-line"></div>
-                    <strong>VS</strong>
-                    <div class="energy-line"></div>
-                </div>
-
-
-                <div class="move-display cpu-display">
-
-                    <div class="display-label">CAPA MOVE</div>
-
-                    <div id="cpuMove" class="big-move">
-                        ?
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div id="result" class="result">
-                CHOOSE YOUR MOVE
-            </div>
-
-            <div id="message" class="message">
-                CAPA đang chờ nước đi của bạn...
-            </div>
-
-
-            <!-- CHOICES -->
-            <div class="choices">
-
-                <button class="choice" data-choice="rock">
-                    <div class="choice-icon">🪨</div>
-                    <strong>ROCK</strong>
-                    <span>1</span>
-                </button>
-
-                <button class="choice" data-choice="paper">
-                    <div class="choice-icon">📄</div>
+                <div class="choice-text">
                     <strong>PAPER</strong>
-                    <span>2</span>
-                </button>
+                    <small>BAO</small>
+                </div>
 
-                <button class="choice" data-choice="scissors">
-                    <div class="choice-icon">✂️</div>
+            </button>
+
+
+            <button class="choice scissors" data-choice="scissors">
+
+                <span class="choice-number">03</span>
+
+                <div class="choice-icon">✂️</div>
+
+                <div class="choice-text">
                     <strong>SCISSORS</strong>
-                    <span>3</span>
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- STATS -->
-        <section class="stats-grid">
-
-            <div class="stat card">
-                <span>🔥 STREAK</span>
-                <strong id="streak">0</strong>
-            </div>
-
-            <div class="stat card">
-                <span>🏆 WINS</span>
-                <strong id="wins">0</strong>
-            </div>
-
-            <div class="stat card">
-                <span>💀 LOSSES</span>
-                <strong id="losses">0</strong>
-            </div>
-
-            <div class="stat card">
-                <span>🤝 DRAWS</span>
-                <strong id="draws">0</strong>
-            </div>
-
-            <div class="stat card">
-                <span>⭐ TOTAL XP</span>
-                <strong id="totalXp">0</strong>
-            </div>
-
-        </section>
-
-
-        <!-- LOWER -->
-        <section class="lower">
-
-            <!-- ACHIEVEMENTS -->
-            <div class="panel card">
-
-                <div class="panel-title">
-                    <div>
-                        <span>🏆</span>
-                        <h2>ACHIEVEMENTS</h2>
-                    </div>
-
-                    <small id="achievementCount">0 / 7</small>
+                    <small>KÉO</small>
                 </div>
 
-                <div id="achievements" class="achievement-list"></div>
+            </button>
 
-            </div>
+        </div>
+
+        <div class="keyboard">
+            Press <b>1</b> Rock
+            <b>2</b> Paper
+            <b>3</b> Scissors
+        </div>
+
+    </section>
 
 
-            <!-- HISTORY -->
-            <div class="panel card">
+    <!-- STATS -->
 
-                <div class="panel-title">
+    <section class="stats">
+
+        <div class="stat glass">
+            <span>🔥</span>
+            <small>STREAK</small>
+            <strong id="streak">0</strong>
+        </div>
+
+        <div class="stat glass">
+            <span>🏆</span>
+            <small>WINS</small>
+            <strong id="wins">0</strong>
+        </div>
+
+        <div class="stat glass">
+            <span>💀</span>
+            <small>LOSSES</small>
+            <strong id="losses">0</strong>
+        </div>
+
+        <div class="stat glass">
+            <span>🤝</span>
+            <small>DRAWS</small>
+            <strong id="draws">0</strong>
+        </div>
+
+        <div class="stat glass">
+            <span>⭐</span>
+            <small>TOTAL XP</small>
+            <strong id="totalXp">0</strong>
+        </div>
+
+    </section>
+
+
+    <!-- LOWER -->
+
+    <section class="bottom-grid">
+
+
+        <!-- ACHIEVEMENTS -->
+
+        <div class="panel glass">
+
+            <div class="panel-head">
+
+                <div>
+                    <span>🏆</span>
+
                     <div>
-                        <span>📜</span>
-                        <h2>MATCH HISTORY</h2>
+                        <h3>ACHIEVEMENTS</h3>
+                        <small>YOUR TROPHIES</small>
                     </div>
-
-                    <small>LOCAL</small>
                 </div>
 
-                <div id="history" class="history"></div>
+                <b id="achievementCount">0 / 7</b>
 
             </div>
 
-        </section>
+            <div id="achievements"
+                 class="achievement-list"></div>
 
-    </main>
-
-
-    <div id="toast" class="toast"></div>
+        </div>
 
 
-    <footer>
-        OẲN TÙ TÌ CAPA • PRO EDITION
-    </footer>
+        <!-- HISTORY -->
+
+        <div class="panel glass">
+
+            <div class="panel-head">
+
+                <div>
+                    <span>📜</span>
+
+                    <div>
+                        <h3>MATCH HISTORY</h3>
+                        <small>RECENT BATTLES</small>
+                    </div>
+                </div>
+
+                <b>LOCAL</b>
+
+            </div>
+
+            <div id="history"
+                 class="history"></div>
+
+        </div>
+
+    </section>
+
+</main>
 
 
-    <script src="script.js?v=30"></script>
+<div id="toast" class="toast"></div>
+
+
+<footer>
+    CAPA ARENA • OẲN TÙ TÌ • PRO EDITION
+</footer>
+
+
+<script src="script.js?v=40"></script>
 
 </body>
 </html>
+```
