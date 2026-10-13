@@ -6,18 +6,23 @@
 
     <title>CAPA Arena — Oẳn Tù Tì</title>
 
-    <link rel="stylesheet" href="style.css?v=50">
+    <link rel="stylesheet" href="style.css?v=51">
 </head>
 
 <body>
 
-    <!-- Background -->
+    <!-- BACKGROUND -->
     <div class="stars"></div>
     <div class="grid-bg"></div>
+
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
 
-    <!-- START SCREEN -->
+
+    <!-- =========================
+         START SCREEN
+    ========================== -->
+
     <section id="startScreen" class="start-screen">
 
         <div class="start-panel">
@@ -43,12 +48,21 @@
             </p>
 
             <div class="start-profile">
-                <div class="rank-icon">◆</div>
+
+                <div class="rank-icon">
+                    ◆
+                </div>
 
                 <div>
-                    <strong id="startRank">BRONZE</strong>
-                    <span id="startLevel">LEVEL 1</span>
+                    <strong id="startRank">
+                        BRONZE
+                    </strong>
+
+                    <span id="startLevel">
+                        LEVEL 1
+                    </span>
                 </div>
+
             </div>
 
             <button id="playButton" class="play-button">
@@ -65,38 +79,63 @@
     </section>
 
 
-    <!-- MAIN GAME -->
+    <!-- =========================
+         GAME SCREEN
+    ========================== -->
+
     <main id="gameScreen" class="game-screen hidden">
 
         <!-- HEADER -->
+
         <header class="topbar">
 
             <div class="brand">
-                <div class="brand-icon">⚡</div>
+
+                <div class="brand-icon">
+                    ⚡
+                </div>
 
                 <div>
-                    <h1>CAPA <span>ARENA</span></h1>
-                    <p>ROCK • PAPER • SCISSORS</p>
+                    <h1>
+                        CAPA <span>ARENA</span>
+                    </h1>
+
+                    <p>
+                        ROCK • PAPER • SCISSORS
+                    </p>
                 </div>
+
             </div>
+
 
             <div class="profile">
 
                 <div class="rank-badge">
-                    <span>◆</span>
+                    ◆
                 </div>
 
                 <div class="profile-info">
-                    <strong id="rankName">BRONZE</strong>
+
+                    <strong id="rankName">
+                        BRONZE
+                    </strong>
 
                     <div class="level-line">
-                        <span id="level">LEVEL 1</span>
-                        <span id="xpText">0 / 100 XP</span>
+
+                        <span id="level">
+                            LEVEL 1
+                        </span>
+
+                        <span id="xpText">
+                            0 / 100 XP
+                        </span>
+
                     </div>
 
                     <div class="xp">
                         <div id="xpBar"></div>
                     </div>
+
                 </div>
 
             </div>
@@ -105,124 +144,231 @@
 
 
         <!-- HUD -->
+
         <section class="hud">
 
             <div class="hud-card">
+
                 <span>MODE</span>
-                <strong id="hudMode">BO3</strong>
+
+                <strong id="hudMode">
+                    BO3
+                </strong>
+
             </div>
 
+
             <div class="hud-card">
+
                 <span>STREAK</span>
-                <strong id="hudStreak">0 🔥</strong>
+
+                <strong id="hudStreak">
+                    0 🔥
+                </strong>
+
             </div>
 
+
             <div class="hud-card">
+
                 <span>WINS</span>
-                <strong id="hudWins">0</strong>
+
+                <strong id="hudWins">
+                    0
+                </strong>
+
             </div>
 
+
             <div class="hud-card">
+
                 <span>BEST</span>
-                <strong id="hudBest">0</strong>
+
+                <strong id="hudBest">
+                    0
+                </strong>
+
             </div>
 
         </section>
 
 
         <!-- CONFIG -->
+
         <section class="control-panel">
 
             <div>
-                <span>GAME MODE</span>
+
+                <span>
+                    GAME MODE
+                </span>
 
                 <select id="mode">
-                    <option value="BO3">BEST OF 3</option>
-                    <option value="BO5">BEST OF 5</option>
-                    <option value="SURVIVAL">SURVIVAL</option>
+
+                    <option value="BO3">
+                        BEST OF 3
+                    </option>
+
+                    <option value="BO5">
+                        BEST OF 5
+                    </option>
+
+                    <option value="SURVIVAL">
+                        SURVIVAL
+                    </option>
+
                 </select>
+
             </div>
+
 
             <div>
-                <span>CAPA AI</span>
+
+                <span>
+                    CAPA AI
+                </span>
 
                 <select id="difficulty">
-                    <option value="Easy">EASY</option>
-                    <option value="Normal">NORMAL</option>
-                    <option value="Hard">HARD</option>
-                    <option value="CAPA AI">CAPA AI</option>
+
+                    <option value="Easy">
+                        EASY
+                    </option>
+
+                    <option value="Normal">
+                        NORMAL
+                    </option>
+
+                    <option value="Hard">
+                        HARD
+                    </option>
+
+                    <option value="CAPA AI">
+                        CAPA AI
+                    </option>
+
                 </select>
+
             </div>
 
-            <button id="resetButton" class="reset-button">
+
+            <button
+                id="resetButton"
+                class="reset-button"
+            >
                 ↻ RESET
             </button>
 
         </section>
 
 
-        <!-- ARENA -->
+        <!-- =========================
+             ARENA
+        ========================== -->
+
         <section class="arena">
 
+
             <!-- PLAYER -->
+
             <div class="fighter player-fighter">
 
                 <div class="fighter-top">
+
                     <span class="online"></span>
+
                     PLAYER
+
                 </div>
+
 
                 <div class="fighter-avatar player-avatar">
                     👤
                 </div>
 
-                <h2>PLAYER</h2>
+
+                <h2>
+                    PLAYER
+                </h2>
+
 
                 <div class="health">
+
                     <div id="playerHealth"></div>
+
                 </div>
 
-                <div class="fighter-status" id="playerStatus">
+
+                <div
+                    class="fighter-status"
+                    id="playerStatus"
+                >
                     READY
                 </div>
 
+
                 <div class="score">
-                    <span id="playerScore">0</span>
+
+                    <span id="playerScore">
+                        0
+                    </span>
+
                 </div>
 
             </div>
 
 
             <!-- CENTER -->
+
             <div class="arena-center">
 
                 <div class="round-info">
-                    <span id="roundText">ROUND 1</span>
+
+                    <span id="roundText">
+                        ROUND 1
+                    </span>
+
                 </div>
+
 
                 <div class="vs">
                     VS
                 </div>
 
-                <div id="status" class="battle-status">
+
+                <div
+                    id="status"
+                    class="battle-status"
+                >
                     CHOOSE YOUR MOVE
                 </div>
 
+
                 <div class="progress-container">
+
                     <div id="progressBar"></div>
+
                 </div>
+
 
                 <div class="battle-result">
 
-                    <div id="playerMove" class="move-display">
+                    <div
+                        id="playerMove"
+                        class="move-display"
+                    >
                         ?
                     </div>
+
 
                     <div class="result-symbol">
                         ⚔
                     </div>
 
-                    <div id="cpuMove" class="move-display">
+
+                    <div
+                        id="cpuMove"
+                        class="move-display"
+                    >
                         ?
                     </div>
 
@@ -232,29 +378,49 @@
 
 
             <!-- CAPA -->
+
             <div class="fighter cpu-fighter">
 
                 <div class="fighter-top">
+
                     CAPA AI
+
                     <span class="ai-dot"></span>
+
                 </div>
+
 
                 <div class="fighter-avatar cpu-avatar">
                     🤖
                 </div>
 
-                <h2>CAPA</h2>
+
+                <h2>
+                    CAPA
+                </h2>
+
 
                 <div class="health">
+
                     <div id="cpuHealth"></div>
+
                 </div>
 
-                <div class="fighter-status" id="cpuStatus">
+
+                <div
+                    class="fighter-status"
+                    id="cpuStatus"
+                >
                     ANALYZING
                 </div>
 
+
                 <div class="score">
-                    <span id="cpuScore">0</span>
+
+                    <span id="cpuScore">
+                        0
+                    </span>
+
                 </div>
 
             </div>
@@ -262,73 +428,173 @@
         </section>
 
 
-        <!-- CHOICES -->
+        <!-- =========================
+             CHOICES
+        ========================== -->
+
         <section class="choice-section">
 
             <div class="section-title">
-                <span>SELECT YOUR WEAPON</span>
-                <small>1 / 2 / 3</small>
+
+                <span>
+                    SELECT YOUR WEAPON
+                </span>
+
+                <small>
+                    1 / 2 / 3
+                </small>
+
             </div>
+
 
             <div class="choices">
 
-                <button class="choice rock" data-choice="rock">
-                    <div class="choice-icon">✊</div>
-                    <strong>ROCK</strong>
-                    <small>KEY 1</small>
+
+                <button
+                    class="choice rock"
+                    data-choice="rock"
+                >
+
+                    <div class="choice-icon">
+                        ✊
+                    </div>
+
+                    <strong>
+                        ROCK
+                    </strong>
+
+                    <small>
+                        KEY 1
+                    </small>
+
                 </button>
 
-                <button class="choice paper" data-choice="paper">
-                    <div class="choice-icon">✋</div>
-                    <strong>PAPER</strong>
-                    <small>KEY 2</small>
+
+                <button
+                    class="choice paper"
+                    data-choice="paper"
+                >
+
+                    <div class="choice-icon">
+                        ✋
+                    </div>
+
+                    <strong>
+                        PAPER
+                    </strong>
+
+                    <small>
+                        KEY 2
+                    </small>
+
                 </button>
 
-                <button class="choice scissors" data-choice="scissors">
-                    <div class="choice-icon">✌️</div>
-                    <strong>SCISSORS</strong>
-                    <small>KEY 3</small>
+
+                <button
+                    class="choice scissors"
+                    data-choice="scissors"
+                >
+
+                    <div class="choice-icon">
+                        ✌️
+                    </div>
+
+                    <strong>
+                        SCISSORS
+                    </strong>
+
+                    <small>
+                        KEY 3
+                    </small>
+
                 </button>
 
             </div>
 
-            <div id="message" class="message">
+
+            <div
+                id="message"
+                class="message"
+            >
                 CAPA is waiting for your move...
             </div>
 
         </section>
 
 
-        <!-- DASHBOARD -->
+        <!-- =========================
+             DASHBOARD
+        ========================== -->
+
         <section class="dashboard">
+
+
+            <!-- STATS -->
 
             <div class="dashboard-card">
 
                 <div class="card-title">
-                    <span>📊</span>
+
+                    <span>
+                        📊
+                    </span>
+
                     BATTLE STATS
+
                 </div>
+
 
                 <div class="stats">
 
                     <div>
-                        <strong id="wins">0</strong>
-                        <span>WINS</span>
+
+                        <strong id="wins">
+                            0
+                        </strong>
+
+                        <span>
+                            WINS
+                        </span>
+
                     </div>
 
-                    <div>
-                        <strong id="losses">0</strong>
-                        <span>LOSSES</span>
-                    </div>
 
                     <div>
-                        <strong id="draws">0</strong>
-                        <span>DRAWS</span>
+
+                        <strong id="losses">
+                            0
+                        </strong>
+
+                        <span>
+                            LOSSES
+                        </span>
+
                     </div>
 
+
                     <div>
-                        <strong id="streak">0</strong>
-                        <span>STREAK</span>
+
+                        <strong id="draws">
+                            0
+                        </strong>
+
+                        <span>
+                            DRAWS
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong id="streak">
+                            0
+                        </strong>
+
+                        <span>
+                            STREAK
+                        </span>
+
                     </div>
 
                 </div>
@@ -336,29 +602,53 @@
             </div>
 
 
+            <!-- ACHIEVEMENTS -->
+
             <div class="dashboard-card">
 
                 <div class="card-title">
-                    <span>🏆</span>
+
+                    <span>
+                        🏆
+                    </span>
+
                     ACHIEVEMENTS
+
                 </div>
 
-                <div id="achievements" class="achievements"></div>
+
+                <div
+                    id="achievements"
+                    class="achievements"
+                ></div>
 
             </div>
 
 
+            <!-- HISTORY -->
+
             <div class="dashboard-card">
 
                 <div class="card-title">
-                    <span>⚔</span>
+
+                    <span>
+                        ⚔
+                    </span>
+
                     BATTLE LOG
+
                 </div>
 
-                <div id="history" class="history">
+
+                <div
+                    id="history"
+                    class="history"
+                >
+
                     <div class="empty-history">
                         No battles yet.
                     </div>
+
                 </div>
 
             </div>
@@ -367,19 +657,23 @@
 
 
         <footer>
-            CAPA ARENA • SYSTEM VERSION 5.0
+            CAPA ARENA • SYSTEM VERSION 5.1
         </footer>
 
     </main>
 
 
     <!-- TOAST -->
-    <div id="toast" class="toast">
+
+    <div
+        id="toast"
+        class="toast"
+    >
         Achievement unlocked!
     </div>
 
 
-    <script src="script.js?v=50"></script>
+    <script src="script.js?v=51"></script>
 
 </body>
 </html>
