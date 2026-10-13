@@ -1,12 +1,12 @@
 /* =====================================================
    CAPA ARENA
-   OẲN TÙ TÌ — GAME ENGINE
+   OẲN TÙ TÌ GAME ENGINE
 ===================================================== */
 
 
-/* =========================
-   DATA
-========================= */
+/* =====================================================
+   GAME DATA
+===================================================== */
 
 const icons = {
     rock: "✊",
@@ -14,11 +14,13 @@ const icons = {
     scissors: "✌️"
 };
 
+
 const names = {
     rock: "ROCK",
     paper: "PAPER",
     scissors: "SCISSORS"
 };
+
 
 const beats = {
     rock: "scissors",
@@ -28,28 +30,40 @@ const beats = {
 
 
 const defaultData = {
+
     xp: 0,
+
     totalXp: 0,
 
     level: 1,
 
     wins: 0,
+
     losses: 0,
+
     draws: 0,
 
     streak: 0,
+
     bestStreak: 0,
 
     history: [],
+
     moves: [],
 
     achievements: {}
+
 };
 
+
+/* =====================================================
+   GAME STATE
+===================================================== */
 
 let data = loadData();
 
 let playerScore = 0;
+
 let cpuScore = 0;
 
 let round = 1;
@@ -57,86 +71,158 @@ let round = 1;
 let matchFinished = false;
 
 let playerHealth = 100;
+
 let cpuHealth = 100;
 
 
-/* =========================
+/* =====================================================
    DOM
-========================= */
+===================================================== */
 
-const startScreen = document.getElementById("startScreen");
-const gameScreen = document.getElementById("gameScreen");
+const startScreen =
+    document.getElementById("startScreen");
 
-const playButton = document.getElementById("playButton");
+const gameScreen =
+    document.getElementById("gameScreen");
 
-const modeSelect = document.getElementById("mode");
-const difficultySelect = document.getElementById("difficulty");
-const resetButton = document.getElementById("resetButton");
+const playButton =
+    document.getElementById("playButton");
 
-const rankName = document.getElementById("rankName");
-const level = document.getElementById("level");
-const xpBar = document.getElementById("xpBar");
-const xpText = document.getElementById("xpText");
+const modeSelect =
+    document.getElementById("mode");
 
-const startRank = document.getElementById("startRank");
-const startLevel = document.getElementById("startLevel");
+const difficultySelect =
+    document.getElementById("difficulty");
 
-const playerScoreEl = document.getElementById("playerScore");
-const cpuScoreEl = document.getElementById("cpuScore");
+const resetButton =
+    document.getElementById("resetButton");
 
-const roundText = document.getElementById("roundText");
-const statusEl = document.getElementById("status");
-const progressBar = document.getElementById("progressBar");
+const rankName =
+    document.getElementById("rankName");
 
-const playerMoveEl = document.getElementById("playerMove");
-const cpuMoveEl = document.getElementById("cpuMove");
+const level =
+    document.getElementById("level");
 
-const messageEl = document.getElementById("message");
+const xpBar =
+    document.getElementById("xpBar");
 
-const playerHealthEl = document.getElementById("playerHealth");
-const cpuHealthEl = document.getElementById("cpuHealth");
+const xpText =
+    document.getElementById("xpText");
 
-const playerStatus = document.getElementById("playerStatus");
-const cpuStatus = document.getElementById("cpuStatus");
+const startRank =
+    document.getElementById("startRank");
 
-const winsEl = document.getElementById("wins");
-const lossesEl = document.getElementById("losses");
-const drawsEl = document.getElementById("draws");
-const streakEl = document.getElementById("streak");
+const startLevel =
+    document.getElementById("startLevel");
 
-const hudMode = document.getElementById("hudMode");
-const hudStreak = document.getElementById("hudStreak");
-const hudWins = document.getElementById("hudWins");
-const hudBest = document.getElementById("hudBest");
+const playerScoreEl =
+    document.getElementById("playerScore");
 
-const achievementsEl = document.getElementById("achievements");
-const historyEl = document.getElementById("history");
+const cpuScoreEl =
+    document.getElementById("cpuScore");
 
-const toast = document.getElementById("toast");
+const roundText =
+    document.getElementById("roundText");
+
+const statusEl =
+    document.getElementById("status");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const playerMoveEl =
+    document.getElementById("playerMove");
+
+const cpuMoveEl =
+    document.getElementById("cpuMove");
+
+const messageEl =
+    document.getElementById("message");
+
+const playerHealthEl =
+    document.getElementById("playerHealth");
+
+const cpuHealthEl =
+    document.getElementById("cpuHealth");
+
+const playerStatus =
+    document.getElementById("playerStatus");
+
+const cpuStatus =
+    document.getElementById("cpuStatus");
+
+const winsEl =
+    document.getElementById("wins");
+
+const lossesEl =
+    document.getElementById("losses");
+
+const drawsEl =
+    document.getElementById("draws");
+
+const streakEl =
+    document.getElementById("streak");
+
+const hudMode =
+    document.getElementById("hudMode");
+
+const hudStreak =
+    document.getElementById("hudStreak");
+
+const hudWins =
+    document.getElementById("hudWins");
+
+const hudBest =
+    document.getElementById("hudBest");
+
+const achievementsEl =
+    document.getElementById("achievements");
+
+const historyEl =
+    document.getElementById("history");
+
+const toast =
+    document.getElementById("toast");
 
 
-/* =========================
-   LOCAL STORAGE
-========================= */
+/* =====================================================
+   STORAGE
+===================================================== */
 
 function loadData() {
 
     try {
 
-        const saved = localStorage.getItem("oanTuTiCAPA");
+        const saved =
+            localStorage.getItem(
+                "oanTuTiCAPA"
+            );
 
         if (!saved) {
-            return { ...defaultData };
+
+            return {
+                ...defaultData
+            };
         }
+
 
         return {
             ...defaultData,
             ...JSON.parse(saved)
         };
 
-    } catch {
+    }
 
-        return { ...defaultData };
+    catch (error) {
+
+        console.log(
+            "Không thể đọc dữ liệu:",
+            error
+        );
+
+        return {
+            ...defaultData
+        };
     }
 }
 
@@ -150,9 +236,9 @@ function saveData() {
 }
 
 
-/* =========================
-   XP / RANK
-========================= */
+/* =====================================================
+   XP / LEVEL / RANK
+===================================================== */
 
 function xpNeeded() {
 
@@ -162,12 +248,29 @@ function xpNeeded() {
 
 function getRank() {
 
-    if (data.level >= 30) return "LEGEND";
-    if (data.level >= 25) return "MASTER";
-    if (data.level >= 20) return "DIAMOND";
-    if (data.level >= 15) return "PLATINUM";
-    if (data.level >= 10) return "GOLD";
-    if (data.level >= 5) return "SILVER";
+    if (data.level >= 30) {
+        return "LEGEND";
+    }
+
+    if (data.level >= 25) {
+        return "MASTER";
+    }
+
+    if (data.level >= 20) {
+        return "DIAMOND";
+    }
+
+    if (data.level >= 15) {
+        return "PLATINUM";
+    }
+
+    if (data.level >= 10) {
+        return "GOLD";
+    }
+
+    if (data.level >= 5) {
+        return "SILVER";
+    }
 
     return "BRONZE";
 }
@@ -175,26 +278,40 @@ function getRank() {
 
 function renderProfile() {
 
-    const needed = xpNeeded();
+    const needed =
+        xpNeeded();
+
 
     const percent =
-        Math.min(100, (data.xp / needed) * 100);
+        Math.min(
+            100,
+            (data.xp / needed) * 100
+        );
 
-    const rank = getRank();
 
-    rankName.textContent = rank;
+    const rank =
+        getRank();
+
+
+    rankName.textContent =
+        rank;
+
 
     level.textContent =
         `LEVEL ${data.level}`;
 
+
     xpText.textContent =
         `${data.xp} / ${needed} XP`;
+
 
     xpBar.style.width =
         `${percent}%`;
 
+
     startRank.textContent =
         rank;
+
 
     startLevel.textContent =
         `LEVEL ${data.level}`;
@@ -204,78 +321,132 @@ function renderProfile() {
 function addXP(amount) {
 
     data.xp += amount;
+
     data.totalXp += amount;
 
-    while (data.xp >= xpNeeded()) {
+
+    let levelUp = false;
+
+
+    while (
+        data.xp >= xpNeeded()
+    ) {
 
         data.xp -= xpNeeded();
 
         data.level++;
 
+        levelUp = true;
+
         showToast(
-            `LEVEL UP! LEVEL ${data.level}`
+            `⚡ LEVEL UP! LEVEL ${data.level}`
         );
     }
+
 
     saveData();
 
     renderProfile();
+
+
+    if (levelUp) {
+
+        startRank.textContent =
+            getRank();
+
+        startLevel.textContent =
+            `LEVEL ${data.level}`;
+    }
 }
 
 
-/* =========================
+/* =====================================================
    ACHIEVEMENTS
-========================= */
+===================================================== */
 
 const achievementList = [
 
     {
         id: "firstWin",
+
         icon: "⚔️",
+
         title: "FIRST WIN",
-        description: "Win your first battle"
+
+        description:
+            "Win your first battle"
     },
+
 
     {
         id: "fighter",
+
         icon: "🥊",
+
         title: "FIGHTER",
-        description: "Win 5 battles"
+
+        description:
+            "Win 5 battles"
     },
+
 
     {
         id: "hotStreak",
+
         icon: "🔥",
+
         title: "HOT STREAK",
-        description: "Reach 5 streak"
+
+        description:
+            "Reach 5 streak"
     },
+
 
     {
         id: "unstoppable",
+
         icon: "💥",
+
         title: "UNSTOPPABLE",
-        description: "Reach 10 streak"
+
+        description:
+            "Reach 10 streak"
     },
+
 
     {
         id: "elite",
+
         icon: "👑",
+
         title: "ELITE",
-        description: "Reach level 10"
+
+        description:
+            "Reach level 10"
     },
+
 
     {
         id: "capa",
+
         icon: "🤖",
+
         title: "CAPA CHALLENGER",
-        description: "Defeat CAPA AI"
+
+        description:
+            "Defeat CAPA AI"
     },
+
 
     {
         id: "survivor",
+
         icon: "☠️",
+
         title: "SURVIVOR",
-        description: "Win Survival mode"
+
+        description:
+            "Win Survival mode"
     }
 
 ];
@@ -288,44 +459,62 @@ function checkAchievements() {
         firstWin:
             data.wins >= 1,
 
+
         fighter:
             data.wins >= 5,
+
 
         hotStreak:
             data.bestStreak >= 5,
 
+
         unstoppable:
             data.bestStreak >= 10,
+
 
         elite:
             data.level >= 10,
 
+
         capa:
             data.wins >= 1,
 
+
         survivor:
             data.history.some(
-                item => item.mode === "SURVIVAL"
-                && item.result === "WIN"
+                item =>
+                    item.mode === "SURVIVAL" &&
+                    item.matchResult === "WIN"
             )
+
     };
 
 
-    achievementList.forEach(item => {
+    achievementList.forEach(
+        achievement => {
 
-        if (
-            conditions[item.id] &&
-            !data.achievements[item.id]
-        ) {
+            if (
+                conditions[
+                    achievement.id
+                ] &&
+                !data.achievements[
+                    achievement.id
+                ]
+            ) {
 
-            data.achievements[item.id] = true;
+                data.achievements[
+                    achievement.id
+                ] = true;
 
-            showToast(
-                `🏆 Achievement: ${item.title}`
-            );
+
+                showToast(
+                    `🏆 ${achievement.title} UNLOCKED!`
+                );
+            }
+
         }
+    );
 
-    });
 
     saveData();
 
@@ -337,52 +526,80 @@ function renderAchievements() {
 
     achievementsEl.innerHTML = "";
 
-    achievementList.forEach(item => {
 
-        const unlocked =
-            data.achievements[item.id];
+    achievementList.forEach(
+        achievement => {
 
-        const div =
-            document.createElement("div");
+            const unlocked =
+                Boolean(
+                    data.achievements[
+                        achievement.id
+                    ]
+                );
 
-        div.className =
-            "achievement" +
-            (unlocked ? " unlocked" : "");
 
-        div.innerHTML = `
+            const element =
+                document.createElement(
+                    "div"
+                );
 
-            <div class="achievement-icon">
-                ${unlocked ? item.icon : "🔒"}
-            </div>
 
-            <strong>
-                ${item.title}
-            </strong>
+            element.className =
+                "achievement" +
+                (
+                    unlocked
+                        ? " unlocked"
+                        : ""
+                );
 
-            <small>
-                ${unlocked
-                    ? "UNLOCKED"
-                    : item.description}
-            </small>
-        `;
 
-        achievementsEl.appendChild(div);
-    });
+            element.innerHTML = `
+
+                <div class="achievement-icon">
+                    ${
+                        unlocked
+                            ? achievement.icon
+                            : "🔒"
+                    }
+                </div>
+
+                <strong>
+                    ${achievement.title}
+                </strong>
+
+                <small>
+                    ${
+                        unlocked
+                            ? "UNLOCKED"
+                            : achievement.description
+                    }
+                </small>
+
+            `;
+
+
+            achievementsEl.appendChild(
+                element
+            );
+        }
+    );
 }
 
 
-/* =========================
+/* =====================================================
    HISTORY
-========================= */
+===================================================== */
 
 function renderHistory() {
 
     if (!data.history.length) {
 
         historyEl.innerHTML = `
+
             <div class="empty-history">
                 No battles yet.
             </div>
+
         `;
 
         return;
@@ -391,17 +608,22 @@ function renderHistory() {
 
     historyEl.innerHTML = "";
 
+
     data.history
         .slice(-10)
         .reverse()
         .forEach(item => {
 
             const row =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             row.className =
                 "history-row " +
                 item.result.toLowerCase();
+
 
             row.innerHTML = `
 
@@ -410,85 +632,79 @@ function renderHistory() {
                 </span>
 
                 <span>
-                    ${item.player}
                     ${icons[item.player]}
                     vs
                     ${icons[item.cpu]}
-                    ${item.cpu}
                 </span>
 
             `;
+
 
             historyEl.appendChild(row);
         });
 }
 
 
-/* =========================
+/* =====================================================
    TOAST
-========================= */
+===================================================== */
 
 let toastTimer;
 
+
 function showToast(text) {
 
-    toast.textContent = text;
+    toast.textContent =
+        text;
 
-    toast.classList.add("show");
 
-    clearTimeout(toastTimer);
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
 
     toastTimer =
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            toast.classList.remove("show");
+                toast.classList.remove(
+                    "show"
+                );
 
-        }, 2500);
+            },
+            2500
+        );
 }
 
 
-/* =========================
+/* =====================================================
    AI
-========================= */
+===================================================== */
 
 function randomMove() {
 
     const moves =
         Object.keys(icons);
 
+
     return moves[
         Math.floor(
-            Math.random() * moves.length
+            Math.random() *
+            moves.length
         )
     ];
-}
-
-
-function weightedChoice(weights) {
-
-    const total =
-        Object.values(weights)
-            .reduce((a, b) => a + b, 0);
-
-    let random =
-        Math.random() * total;
-
-    for (const move in weights) {
-
-        random -= weights[move];
-
-        if (random <= 0) {
-            return move;
-        }
-    }
-
-    return randomMove();
 }
 
 
 function predictPlayer() {
 
     if (!data.moves.length) {
+
         return randomMove();
     }
 
@@ -498,43 +714,51 @@ function predictPlayer() {
 
 
     const count = {
+
         rock: 0,
+
         paper: 0,
+
         scissors: 0
+
     };
 
 
-    recent.forEach(move => {
+    recent.forEach(
+        move => {
 
-        count[move]++;
-    });
+            count[move]++;
+        }
+    );
 
 
     let predicted =
         Object.keys(count)
             .sort(
                 (a, b) =>
-                    count[b] - count[a]
+                    count[b] -
+                    count[a]
             )[0];
 
-
-    /*
-        CAPA không chỉ nhìn move
-        gần nhất mà còn nhìn xu hướng.
-    */
 
     if (recent.length >= 3) {
 
         const last =
-            recent[recent.length - 1];
+            recent[
+                recent.length - 1
+            ];
+
 
         const before =
-            recent[recent.length - 2];
+            recent[
+                recent.length - 2
+            ];
 
 
         if (last === before) {
 
-            predicted = last;
+            predicted =
+                last;
         }
     }
 
@@ -549,15 +773,21 @@ function cpuMove() {
         difficultySelect.value;
 
 
-    if (difficulty === "Easy") {
+    if (
+        difficulty === "Easy"
+    ) {
 
         return randomMove();
     }
 
 
-    if (difficulty === "Normal") {
+    if (
+        difficulty === "Normal"
+    ) {
 
-        if (Math.random() < .65) {
+        if (
+            Math.random() < .65
+        ) {
 
             const predicted =
                 predictPlayer();
@@ -565,19 +795,25 @@ function cpuMove() {
             return beats[predicted];
         }
 
+
         return randomMove();
     }
 
 
-    if (difficulty === "Hard") {
+    if (
+        difficulty === "Hard"
+    ) {
 
-        if (Math.random() < .8) {
+        if (
+            Math.random() < .80
+        ) {
 
             const predicted =
                 predictPlayer();
 
             return beats[predicted];
         }
+
 
         return randomMove();
     }
@@ -585,7 +821,9 @@ function cpuMove() {
 
     /* CAPA AI */
 
-    if (Math.random() < .92) {
+    if (
+        Math.random() < .92
+    ) {
 
         const predicted =
             predictPlayer();
@@ -593,36 +831,49 @@ function cpuMove() {
         return beats[predicted];
     }
 
+
     return randomMove();
 }
 
 
-/* =========================
+/* =====================================================
    RESULT
-========================= */
+===================================================== */
 
-function getResult(player, cpu) {
+function getResult(
+    player,
+    cpu
+) {
 
-    if (player === cpu) {
+    if (
+        player === cpu
+    ) {
+
         return "DRAW";
     }
 
-    if (beats[player] === cpu) {
+
+    if (
+        beats[player] === cpu
+    ) {
+
         return "WIN";
     }
+
 
     return "LOSE";
 }
 
 
-/* =========================
-   BOARD
-========================= */
+/* =====================================================
+   UPDATE BOARD
+===================================================== */
 
 function updateBoard() {
 
     playerScoreEl.textContent =
         playerScore;
+
 
     cpuScoreEl.textContent =
         cpuScore;
@@ -635,11 +886,14 @@ function updateBoard() {
     hudMode.textContent =
         modeSelect.value;
 
+
     hudStreak.textContent =
         `${data.streak} 🔥`;
 
+
     hudWins.textContent =
         data.wins;
+
 
     hudBest.textContent =
         data.bestStreak;
@@ -648,25 +902,40 @@ function updateBoard() {
     winsEl.textContent =
         data.wins;
 
+
     lossesEl.textContent =
         data.losses;
 
+
     drawsEl.textContent =
         data.draws;
+
 
     streakEl.textContent =
         data.streak;
 
 
-    /* Health */
-
     let maxScore;
 
-    if (modeSelect.value === "BO3") {
+
+    if (
+        modeSelect.value === "BO3"
+    ) {
+
         maxScore = 2;
-    } else if (modeSelect.value === "BO5") {
+
+    }
+
+    else if (
+        modeSelect.value === "BO5"
+    ) {
+
         maxScore = 3;
-    } else {
+
+    }
+
+    else {
+
         maxScore = 5;
     }
 
@@ -675,7 +944,10 @@ function updateBoard() {
         Math.max(
             0,
             100 -
-            (cpuScore / maxScore) * 100
+            (
+                cpuScore /
+                maxScore
+            ) * 100
         );
 
 
@@ -683,30 +955,39 @@ function updateBoard() {
         Math.max(
             0,
             100 -
-            (playerScore / maxScore) * 100
+            (
+                playerScore /
+                maxScore
+            ) * 100
         );
 
 
     playerHealthEl.style.width =
         `${playerHealth}%`;
 
+
     cpuHealthEl.style.width =
         `${cpuHealth}%`;
 
 
     renderProfile();
+
     renderAchievements();
+
     renderHistory();
 }
 
 
-/* =========================
-   CHOOSE MOVE
-========================= */
+/* =====================================================
+   CHOOSE
+===================================================== */
 
 function choose(player) {
 
-    if (matchFinished) {
+    if (
+        matchFinished
+    ) {
+
         return;
     }
 
@@ -716,22 +997,28 @@ function choose(player) {
 
 
     const result =
-        getResult(player, cpu);
+        getResult(
+            player,
+            cpu
+        );
 
 
-    /* Save player move */
+    data.moves.push(
+        player
+    );
 
-    data.moves.push(player);
 
-    if (data.moves.length > 30) {
+    if (
+        data.moves.length > 30
+    ) {
+
         data.moves.shift();
     }
 
 
-    /* Display moves */
-
     playerMoveEl.textContent =
         icons[player];
+
 
     cpuMoveEl.textContent =
         icons[cpu];
@@ -739,6 +1026,7 @@ function choose(player) {
 
     playerStatus.textContent =
         names[player];
+
 
     cpuStatus.textContent =
         names[cpu];
@@ -748,19 +1036,18 @@ function choose(player) {
         result;
 
 
-    messageEl.textContent =
-        `${names[player]} vs ${names[cpu]}`;
-
-
-    /* Result */
-
-    if (result === "WIN") {
+    if (
+        result === "WIN"
+    ) {
 
         playerScore++;
 
+
         data.wins++;
 
+
         data.streak++;
+
 
         data.bestStreak =
             Math.max(
@@ -771,52 +1058,86 @@ function choose(player) {
 
         addXP(25);
 
+
         statusEl.style.color =
             "var(--green)";
+
 
         messageEl.textContent =
             "⚡ YOU WIN THE ROUND!";
 
 
-        document.querySelector(".player-fighter")
-            .classList.add("win");
+        document
+            .querySelector(
+                ".player-fighter"
+            )
+            .classList.add(
+                "win"
+            );
 
 
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            document.querySelector(".player-fighter")
-                .classList.remove("win");
+                document
+                    .querySelector(
+                        ".player-fighter"
+                    )
+                    .classList.remove(
+                        "win"
+                    );
 
-        }, 600);
+            },
+            600
+        );
 
     }
 
 
-    else if (result === "LOSE") {
+    else if (
+        result === "LOSE"
+    ) {
 
         cpuScore++;
 
+
         data.losses++;
+
 
         data.streak = 0;
 
+
         statusEl.style.color =
             "var(--red)";
+
 
         messageEl.textContent =
             "💀 CAPA WINS THE ROUND";
 
 
-        document.querySelector(".cpu-fighter")
-            .classList.add("lose");
+        document
+            .querySelector(
+                ".cpu-fighter"
+            )
+            .classList.add(
+                "lose"
+            );
 
 
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            document.querySelector(".cpu-fighter")
-                .classList.remove("lose");
+                document
+                    .querySelector(
+                        ".cpu-fighter"
+                    )
+                    .classList.remove(
+                        "lose"
+                    );
 
-        }, 600);
+            },
+            600
+        );
 
     }
 
@@ -825,15 +1146,15 @@ function choose(player) {
 
         data.draws++;
 
+
         statusEl.style.color =
             "var(--yellow)";
+
 
         messageEl.textContent =
             "⚡ DRAW — AGAIN!";
     }
 
-
-    /* History */
 
     data.history.push({
 
@@ -845,11 +1166,17 @@ function choose(player) {
 
         mode: modeSelect.value,
 
+        matchResult: null,
+
         date: Date.now()
+
     });
 
 
-    if (data.history.length > 30) {
+    if (
+        data.history.length > 30
+    ) {
+
         data.history.shift();
     }
 
@@ -857,35 +1184,40 @@ function choose(player) {
     saveData();
 
 
-    checkAchievements();
-
-
     updateBoard();
 
 
-    /* Check match */
+    checkAchievements();
 
-    setTimeout(() => {
 
-        checkMatch();
-
-    }, 550);
+    setTimeout(
+        checkMatch,
+        550
+    );
 }
 
 
-/* =========================
-   MATCH SYSTEM
-========================= */
+/* =====================================================
+   MATCH
+===================================================== */
 
 function getRequiredWins() {
 
-    if (modeSelect.value === "BO5") {
+    if (
+        modeSelect.value === "BO5"
+    ) {
+
         return 3;
     }
 
-    if (modeSelect.value === "SURVIVAL") {
+
+    if (
+        modeSelect.value === "SURVIVAL"
+    ) {
+
         return 5;
     }
+
 
     return 2;
 }
@@ -897,38 +1229,57 @@ function checkMatch() {
         getRequiredWins();
 
 
-    if (modeSelect.value === "SURVIVAL") {
+    if (
+        modeSelect.value ===
+        "SURVIVAL"
+    ) {
 
-        if (playerScore >= required) {
+        if (
+            playerScore >= required
+        ) {
 
-            finishMatch("WIN");
+            finishMatch(
+                "WIN"
+            );
 
             return;
         }
 
-        if (cpuScore >= 1) {
 
-            finishMatch("LOSE");
+        if (
+            cpuScore >= 1
+        ) {
+
+            finishMatch(
+                "LOSE"
+            );
 
             return;
         }
-
     }
 
 
     else {
 
-        if (playerScore >= required) {
+        if (
+            playerScore >= required
+        ) {
 
-            finishMatch("WIN");
+            finishMatch(
+                "WIN"
+            );
 
             return;
         }
 
 
-        if (cpuScore >= required) {
+        if (
+            cpuScore >= required
+        ) {
 
-            finishMatch("LOSE");
+            finishMatch(
+                "LOSE"
+            );
 
             return;
         }
@@ -939,30 +1290,49 @@ function checkMatch() {
 }
 
 
-/* =========================
+/* =====================================================
    NEXT ROUND
-========================= */
+===================================================== */
 
 function nextRound() {
 
     round++;
 
-    const required =
-        getRequiredWins();
+
+    let totalRounds;
 
 
-    const totalRounds =
-        modeSelect.value === "BO3"
-            ? 3
-            : modeSelect.value === "BO5"
-                ? 5
-                : 5;
+    if (
+        modeSelect.value ===
+        "BO3"
+    ) {
+
+        totalRounds = 3;
+
+    }
+
+    else if (
+        modeSelect.value ===
+        "BO5"
+    ) {
+
+        totalRounds = 5;
+
+    }
+
+    else {
+
+        totalRounds = 5;
+    }
 
 
     progressBar.style.width =
         `${Math.min(
             100,
-            ((round - 1) / totalRounds) * 100
+            (
+                (round - 1) /
+                totalRounds
+            ) * 100
         )}%`;
 
 
@@ -973,8 +1343,10 @@ function nextRound() {
     statusEl.textContent =
         "CHOOSE YOUR MOVE";
 
+
     statusEl.style.color =
         "var(--cyan)";
+
 
     messageEl.textContent =
         "CAPA is analyzing your pattern...";
@@ -983,14 +1355,15 @@ function nextRound() {
     playerMoveEl.textContent =
         "?";
 
+
     cpuMoveEl.textContent =
         "?";
 }
 
 
-/* =========================
+/* =====================================================
    FINISH MATCH
-========================= */
+===================================================== */
 
 function finishMatch(result) {
 
@@ -1001,16 +1374,37 @@ function finishMatch(result) {
         "100%";
 
 
-    if (result === "WIN") {
+    const lastBattle =
+        data.history[
+            data.history.length - 1
+        ];
+
+
+    if (lastBattle) {
+
+        lastBattle.matchResult =
+            result;
+    }
+
+
+    saveData();
+
+
+    if (
+        result === "WIN"
+    ) {
 
         statusEl.textContent =
             "VICTORY";
 
+
         statusEl.style.color =
             "var(--green)";
 
+
         messageEl.textContent =
             "🏆 CAPA DEFEATED — YOU ARE THE CHAMPION!";
+
 
         addXP(100);
 
@@ -1021,12 +1415,13 @@ function finishMatch(result) {
         statusEl.textContent =
             "DEFEAT";
 
+
         statusEl.style.color =
             "var(--red)";
 
+
         messageEl.textContent =
             "💀 CAPA HAS WON THIS MATCH.";
-
     }
 
 
@@ -1045,25 +1440,32 @@ function finishMatch(result) {
     checkAchievements();
 
 
-    setTimeout(() => {
+    renderHistory();
 
-        showToast(
-            result === "WIN"
-                ? "🏆 MATCH VICTORY!"
-                : "💀 MATCH DEFEAT"
-        );
 
-    }, 300);
+    setTimeout(
+        () => {
+
+            showToast(
+                result === "WIN"
+                    ? "🏆 MATCH VICTORY!"
+                    : "💀 MATCH DEFEAT"
+            );
+
+        },
+        300
+    );
 }
 
 
-/* =========================
-   RESET GAME
-========================= */
+/* =====================================================
+   RESET
+===================================================== */
 
 function resetGame() {
 
     playerScore = 0;
+
     cpuScore = 0;
 
     round = 1;
@@ -1071,11 +1473,13 @@ function resetGame() {
     matchFinished = false;
 
     playerHealth = 100;
+
     cpuHealth = 100;
 
 
     playerMoveEl.textContent =
         "?";
+
 
     cpuMoveEl.textContent =
         "?";
@@ -1083,6 +1487,7 @@ function resetGame() {
 
     statusEl.textContent =
         "CHOOSE YOUR MOVE";
+
 
     statusEl.style.color =
         "var(--cyan)";
@@ -1095,6 +1500,7 @@ function resetGame() {
     playerStatus.textContent =
         "READY";
 
+
     cpuStatus.textContent =
         "ANALYZING";
 
@@ -1103,45 +1509,86 @@ function resetGame() {
         "0%";
 
 
+    playerHealthEl.style.width =
+        "100%";
+
+
+    cpuHealthEl.style.width =
+        "100%";
+
+
     updateBoard();
 }
 
 
-/* =========================
-   EVENTS
-========================= */
+/* =====================================================
+   PLAY NOW
+   FIXED VERSION
+===================================================== */
 
 playButton.addEventListener(
     "click",
-    () => {
+    function () {
 
-        startScreen.classList.add("hide");
+        /*
+            QUAN TRỌNG:
 
-        setTimeout(() => {
+            Hiện game trước.
+            Sau đó mới ẩn Start Screen.
 
-            gameScreen.classList.remove("hidden");
+            Không dùng setTimeout.
+        */
 
-        }, 350);
+        gameScreen.classList.remove(
+            "hidden"
+        );
+
+
+        startScreen.classList.add(
+            "hide"
+        );
+
+
+        updateBoard();
+
+
+        window.scrollTo(
+            {
+                top: 0,
+                behavior: "smooth"
+            }
+        );
+
     }
 );
 
 
+/* =====================================================
+   CHOICE BUTTONS
+===================================================== */
+
 document
     .querySelectorAll(".choice")
-    .forEach(button => {
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            () => {
+            button.addEventListener(
+                "click",
+                function () {
 
-                choose(
-                    button.dataset.choice
-                );
+                    choose(
+                        this.dataset.choice
+                    );
 
-            }
-        );
-    });
+                }
+            );
+        }
+    );
 
+
+/* =====================================================
+   RESET
+===================================================== */
 
 resetButton.addEventListener(
     "click",
@@ -1149,11 +1596,19 @@ resetButton.addEventListener(
 );
 
 
+/* =====================================================
+   MODE CHANGE
+===================================================== */
+
 modeSelect.addEventListener(
     "change",
     resetGame
 );
 
+
+/* =====================================================
+   DIFFICULTY CHANGE
+===================================================== */
 
 difficultySelect.addEventListener(
     "change",
@@ -1161,23 +1616,34 @@ difficultySelect.addEventListener(
 );
 
 
-/* =========================
+/* =====================================================
    KEYBOARD
-========================= */
+===================================================== */
 
 document.addEventListener(
     "keydown",
     event => {
 
-        if (event.key === "1") {
+        if (
+            event.key === "1"
+        ) {
+
             choose("rock");
         }
 
-        if (event.key === "2") {
+
+        if (
+            event.key === "2"
+        ) {
+
             choose("paper");
         }
 
-        if (event.key === "3") {
+
+        if (
+            event.key === "3"
+        ) {
+
             choose("scissors");
         }
 
@@ -1185,9 +1651,9 @@ document.addEventListener(
 );
 
 
-/* =========================
+/* =====================================================
    INITIALIZE
-========================= */
+===================================================== */
 
 renderProfile();
 
