@@ -6,12 +6,10 @@
 
 :root {
     --bg: #050711;
-    --panel: rgba(13, 17, 34, 0.78);
-    --panel-2: rgba(20, 25, 48, 0.8);
-    --border: rgba(120, 150, 255, 0.18);
+    --panel: rgba(13, 17, 34, .82);
+    --border: rgba(120, 150, 255, .18);
 
     --cyan: #00eaff;
-    --blue: #5875ff;
     --purple: #a855f7;
     --green: #00ff9d;
     --red: #ff3864;
@@ -27,39 +25,74 @@ html {
 
 body {
     min-height: 100vh;
+
     background:
-        radial-gradient(circle at 50% 10%, rgba(70, 80, 180, .22), transparent 35%),
-        radial-gradient(circle at 10% 80%, rgba(0, 234, 255, .08), transparent 30%),
-        radial-gradient(circle at 90% 70%, rgba(168, 85, 247, .09), transparent 30%),
+        radial-gradient(
+            circle at 50% 10%,
+            rgba(70, 80, 180, .22),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 10% 80%,
+            rgba(0, 234, 255, .08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 70%,
+            rgba(168, 85, 247, .09),
+            transparent 30%
+        ),
         var(--bg);
 
     color: var(--text);
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     overflow-x: hidden;
 }
 
 
-/* =========================
+/* =====================================
    BACKGROUND
-========================= */
+===================================== */
 
 .stars {
     position: fixed;
     inset: 0;
+
     pointer-events: none;
+
     opacity: .45;
 
     background-image:
-        radial-gradient(circle, white 1px, transparent 1px),
-        radial-gradient(circle, #5d7cff 1px, transparent 1px);
+        radial-gradient(
+            circle,
+            white 1px,
+            transparent 1px
+        ),
+        radial-gradient(
+            circle,
+            #5d7cff 1px,
+            transparent 1px
+        );
 
-    background-size: 100px 100px, 170px 170px;
-    background-position: 0 0, 40px 80px;
+    background-size:
+        100px 100px,
+        170px 170px;
 
-    animation: starsMove 30s linear infinite;
+    background-position:
+        0 0,
+        40px 80px;
+
+    animation:
+        starsMove 30s linear infinite;
 }
 
 @keyframes starsMove {
+
     from {
         transform: translateY(0);
     }
@@ -69,77 +102,116 @@ body {
     }
 }
 
+
 .grid-bg {
     position: fixed;
-    inset: auto 0 0;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
     height: 45vh;
 
     background-image:
-        linear-gradient(rgba(0, 234, 255, .06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 234, 255, .06) 1px, transparent 1px);
+        linear-gradient(
+            rgba(0,234,255,.06) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(0,234,255,.06) 1px,
+            transparent 1px
+        );
 
     background-size: 50px 50px;
 
-    transform: perspective(500px) rotateX(60deg);
+    transform:
+        perspective(500px)
+        rotateX(60deg);
+
     transform-origin: bottom;
 
     pointer-events: none;
 }
 
+
 .orb {
     position: fixed;
+
     width: 350px;
     height: 350px;
+
     border-radius: 50%;
+
     filter: blur(100px);
+
     opacity: .12;
+
     pointer-events: none;
 }
 
 .orb-1 {
     background: var(--cyan);
+
     top: 10%;
     left: -150px;
 }
 
 .orb-2 {
     background: var(--purple);
+
     right: -150px;
     bottom: 10%;
 }
 
 
-/* =========================
+/* =====================================
    START SCREEN
-========================= */
+===================================== */
 
 .start-screen {
     position: fixed;
+
     inset: 0;
 
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     z-index: 100;
 
     background:
-        radial-gradient(circle at center,
-        rgba(44, 65, 180, .22),
-        transparent 50%),
+        radial-gradient(
+            circle at center,
+            rgba(44,65,180,.22),
+            transparent 50%
+        ),
         #03050d;
 
-    transition: opacity .6s, transform .6s;
+    opacity: 1;
+    visibility: visible;
+
+    transition:
+        opacity .45s ease,
+        transform .45s ease,
+        visibility .45s;
 }
+
 
 .start-screen.hide {
     opacity: 0;
-    transform: scale(1.15);
+
+    visibility: hidden;
+
     pointer-events: none;
+
+    transform: scale(1.08);
 }
+
 
 .start-panel {
     width: min(600px, 92%);
+
     padding: 55px 35px;
 
     text-align: center;
@@ -147,24 +219,34 @@ body {
     background:
         linear-gradient(
             145deg,
-            rgba(20, 27, 58, .95),
-            rgba(7, 10, 23, .94)
+            rgba(20,27,58,.96),
+            rgba(7,10,23,.96)
         );
 
-    border: 1px solid rgba(0, 234, 255, .25);
+    border:
+        1px solid
+        rgba(0,234,255,.25);
+
     border-radius: 30px;
 
     box-shadow:
-        0 0 80px rgba(0, 234, 255, .08),
-        inset 0 0 50px rgba(88, 117, 255, .04);
+        0 0 80px
+        rgba(0,234,255,.08),
+
+        inset 0 0 50px
+        rgba(88,117,255,.04);
 
     position: relative;
+
     overflow: hidden;
 }
 
+
 .start-panel::before {
     content: "";
+
     position: absolute;
+
     inset: 0;
 
     background:
@@ -175,11 +257,16 @@ body {
             transparent 70%
         );
 
-    animation: shine 5s infinite;
+    animation:
+        shine 5s infinite;
 }
 
+
 @keyframes shine {
-    0%, 70%, 100% {
+
+    0%,
+    70%,
+    100% {
         transform: translateX(-100%);
     }
 
@@ -188,296 +275,454 @@ body {
     }
 }
 
+
 .system-text {
     font-size: 11px;
+
     letter-spacing: 4px;
+
     color: var(--green);
+
     margin-bottom: 25px;
 }
 
+
 .logo-big {
-    font-size: clamp(55px, 12vw, 100px);
+    font-size:
+        clamp(
+            55px,
+            12vw,
+            100px
+        );
+
     font-weight: 900;
+
     letter-spacing: 8px;
 
     color: white;
 
     text-shadow:
         0 0 10px var(--cyan),
-        0 0 35px rgba(0, 234, 255, .7);
+        0 0 35px rgba(0,234,255,.7);
 
     line-height: .9;
 }
+
 
 .logo-big span {
     color: var(--cyan);
 }
 
+
 .logo-big small {
     display: block;
+
     font-size: 18px;
+
     letter-spacing: 12px;
+
     color: var(--cyan);
+
     margin-top: 14px;
 }
+
 
 .game-title {
     margin-top: 30px;
 
     font-size: 20px;
+
     letter-spacing: 7px;
 
     color: #dce4ff;
 }
 
+
 .start-description {
     color: var(--muted);
+
     line-height: 1.7;
+
     margin: 20px 0 30px;
 }
 
+
 .start-profile {
     width: fit-content;
+
     margin: auto;
 
     display: flex;
+
     align-items: center;
+
     gap: 14px;
 
     padding: 12px 25px;
 
-    background: rgba(255,255,255,.04);
-    border: 1px solid var(--border);
+    background:
+        rgba(255,255,255,.04);
+
+    border:
+        1px solid var(--border);
+
     border-radius: 15px;
 }
 
+
 .rank-icon {
     color: var(--cyan);
+
     font-size: 25px;
 }
 
+
 .start-profile strong {
     display: block;
+
     color: var(--yellow);
+
     letter-spacing: 2px;
 }
 
+
 .start-profile span {
     display: block;
+
     font-size: 11px;
+
     color: var(--muted);
+
     margin-top: 4px;
 }
 
+
 .play-button {
     width: 100%;
+
     margin-top: 30px;
+
     padding: 18px;
 
     border: 0;
+
     border-radius: 14px;
 
     color: #031017;
-    background: linear-gradient(
-        90deg,
-        var(--cyan),
-        #7af7ff
-    );
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--cyan),
+            #7af7ff
+        );
 
     font-size: 17px;
+
     font-weight: 900;
+
     letter-spacing: 3px;
 
     cursor: pointer;
 
     box-shadow:
-        0 0 25px rgba(0,234,255,.35);
+        0 0 25px
+        rgba(0,234,255,.35);
 
     transition: .25s;
+
+    position: relative;
+
+    z-index: 5;
 }
 
+
 .play-button:hover {
-    transform: translateY(-3px) scale(1.01);
+    transform:
+        translateY(-3px)
+        scale(1.01);
+
     box-shadow:
-        0 0 40px rgba(0,234,255,.65);
+        0 0 40px
+        rgba(0,234,255,.65);
 }
+
+
+.play-button:active {
+    transform: scale(.97);
+}
+
 
 .play-button span {
     margin-right: 10px;
 }
 
+
 .start-footer {
     margin-top: 25px;
+
     font-size: 9px;
+
     letter-spacing: 4px;
+
     color: #505b79;
 }
 
 
-/* =========================
-   GAME
-========================= */
+/* =====================================
+   GAME SCREEN
+===================================== */
 
 .game-screen {
     width: min(1400px, 94%);
+
     margin: auto;
-    padding: 25px 0 50px;
+
+    padding:
+        25px 0 50px;
+
     position: relative;
+
     z-index: 2;
+
+    opacity: 1;
+
+    transition: opacity .3s ease;
 }
+
 
 .hidden {
     display: none !important;
 }
 
 
-/* HEADER */
+/* =====================================
+   TOPBAR
+===================================== */
 
 .topbar {
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
 
     padding: 15px 20px;
+
     margin-bottom: 18px;
 
-    background: rgba(8, 12, 28, .72);
-    border: 1px solid var(--border);
+    background:
+        rgba(8,12,28,.72);
+
+    border:
+        1px solid var(--border);
+
     border-radius: 18px;
 
     backdrop-filter: blur(18px);
 }
 
+
 .brand {
     display: flex;
+
     align-items: center;
+
     gap: 12px;
 }
+
 
 .brand-icon {
     width: 45px;
     height: 45px;
 
     display: grid;
+
     place-items: center;
 
     border-radius: 12px;
 
     color: #001016;
+
     background: var(--cyan);
 
     font-size: 23px;
 
     box-shadow:
-        0 0 25px rgba(0,234,255,.35);
+        0 0 25px
+        rgba(0,234,255,.35);
 }
+
 
 .brand h1 {
     font-size: 18px;
+
     letter-spacing: 3px;
 }
+
 
 .brand h1 span {
     color: var(--cyan);
 }
 
+
 .brand p {
     font-size: 8px;
+
     color: var(--muted);
+
     letter-spacing: 2px;
+
     margin-top: 4px;
 }
 
+
 .profile {
     display: flex;
+
     align-items: center;
+
     gap: 10px;
 }
+
 
 .rank-badge {
     width: 42px;
     height: 42px;
 
     display: grid;
+
     place-items: center;
 
     border-radius: 12px;
 
     color: var(--yellow);
-    background: rgba(255,209,102,.08);
-    border: 1px solid rgba(255,209,102,.25);
+
+    background:
+        rgba(255,209,102,.08);
+
+    border:
+        1px solid
+        rgba(255,209,102,.25);
 }
+
 
 .profile-info {
     min-width: 150px;
 }
 
+
 .profile-info > strong {
     color: var(--yellow);
+
     font-size: 12px;
+
     letter-spacing: 2px;
 }
 
+
 .level-line {
     display: flex;
+
     justify-content: space-between;
+
     font-size: 9px;
+
     color: var(--muted);
+
     margin: 5px 0;
 }
 
+
 .xp {
     height: 5px;
+
     overflow: hidden;
+
     background: #171c31;
+
     border-radius: 20px;
 }
 
+
 .xp div {
     height: 100%;
+
     width: 0;
-    background: linear-gradient(90deg, var(--purple), var(--cyan));
-    box-shadow: 0 0 10px var(--cyan);
-    transition: width .5s;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--purple),
+            var(--cyan)
+        );
+
+    box-shadow:
+        0 0 10px var(--cyan);
+
+    transition:
+        width .5s;
 }
 
 
-/* HUD */
+/* =====================================
+   HUD
+===================================== */
 
 .hud {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
     gap: 10px;
+
     margin-bottom: 12px;
 }
+
 
 .hud-card {
     padding: 12px 15px;
 
-    background: rgba(11, 15, 31, .7);
-    border: 1px solid var(--border);
+    background:
+        rgba(11,15,31,.7);
+
+    border:
+        1px solid var(--border);
+
     border-radius: 13px;
 }
 
+
 .hud-card span {
     display: block;
+
     font-size: 8px;
+
     color: var(--muted);
+
     letter-spacing: 2px;
 }
 
+
 .hud-card strong {
     display: block;
+
     margin-top: 5px;
+
     font-size: 16px;
 }
 
 
-/* CONFIG */
+/* =====================================
+   CONTROL PANEL
+===================================== */
 
 .control-panel {
     display: flex;
+
     gap: 12px;
+
     align-items: end;
 
     padding: 15px;
@@ -485,21 +730,31 @@ body {
     margin-bottom: 15px;
 
     background: var(--panel);
-    border: 1px solid var(--border);
+
+    border:
+        1px solid var(--border);
+
     border-radius: 16px;
 }
+
 
 .control-panel > div {
     flex: 1;
 }
 
+
 .control-panel span {
     display: block;
+
     font-size: 8px;
+
     color: var(--muted);
+
     letter-spacing: 2px;
+
     margin-bottom: 7px;
 }
+
 
 select {
     width: 100%;
@@ -507,38 +762,54 @@ select {
     padding: 11px 13px;
 
     color: white;
+
     background: #0d1226;
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
+
     border-radius: 9px;
 
     outline: none;
+
+    cursor: pointer;
 }
+
 
 .reset-button {
     padding: 11px 18px;
 
     color: #ff7d9a;
-    background: rgba(255,56,100,.06);
 
-    border: 1px solid rgba(255,56,100,.25);
+    background:
+        rgba(255,56,100,.06);
+
+    border:
+        1px solid
+        rgba(255,56,100,.25);
+
     border-radius: 9px;
 
     cursor: pointer;
 }
 
 
-/* =========================
+/* =====================================
    ARENA
-========================= */
+===================================== */
 
 .arena {
     display: grid;
-    grid-template-columns: 1fr .8fr 1fr;
+
+    grid-template-columns:
+        1fr .8fr 1fr;
+
     gap: 15px;
+
     align-items: center;
 
     min-height: 390px;
+
     padding: 25px;
 
     background:
@@ -547,49 +818,65 @@ select {
             rgba(74,92,255,.1),
             transparent 40%
         ),
-        rgba(7, 10, 22, .72);
+        rgba(7,10,22,.72);
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
+
     border-radius: 25px;
 
     position: relative;
+
     overflow: hidden;
 }
+
 
 .arena::before {
     content: "";
 
     position: absolute;
+
     width: 500px;
     height: 500px;
 
     left: 50%;
     top: 50%;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%, -50%);
 
     border-radius: 50%;
 
-    border: 1px solid rgba(0,234,255,.08);
+    border:
+        1px solid
+        rgba(0,234,255,.08);
 
     box-shadow:
-        0 0 0 40px rgba(0,234,255,.02),
-        0 0 0 80px rgba(0,234,255,.015);
+        0 0 0 40px
+        rgba(0,234,255,.02),
+
+        0 0 0 80px
+        rgba(0,234,255,.015);
 
     pointer-events: none;
 }
 
+
 .fighter {
     text-align: center;
+
     padding: 20px;
 
-    background: linear-gradient(
-        145deg,
-        rgba(22,28,55,.8),
-        rgba(9,12,26,.85)
-    );
+    background:
+        linear-gradient(
+            145deg,
+            rgba(22,28,55,.8),
+            rgba(9,12,26,.85)
+        );
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
+
     border-radius: 20px;
 
     position: relative;
@@ -597,47 +884,56 @@ select {
     transition: .3s;
 }
 
+
 .fighter:hover {
-    transform: translateY(-4px);
+    transform:
+        translateY(-4px);
 }
 
-.player-fighter {
-    box-shadow:
-        inset 0 0 30px rgba(0,234,255,.025);
-}
-
-.cpu-fighter {
-    box-shadow:
-        inset 0 0 30px rgba(168,85,247,.025);
-}
 
 .fighter-top {
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     gap: 7px;
 
     font-size: 9px;
+
     color: var(--muted);
+
     letter-spacing: 3px;
 }
+
 
 .online,
 .ai-dot {
     width: 6px;
     height: 6px;
+
     border-radius: 50%;
 }
 
+
 .online {
     background: var(--green);
-    box-shadow: 0 0 10px var(--green);
+
+    box-shadow:
+        0 0 10px
+        var(--green);
 }
+
 
 .ai-dot {
     background: var(--purple);
-    box-shadow: 0 0 10px var(--purple);
+
+    box-shadow:
+        0 0 10px
+        var(--purple);
 }
+
 
 .fighter-avatar {
     width: 105px;
@@ -646,194 +942,267 @@ select {
     margin: 20px auto;
 
     display: grid;
+
     place-items: center;
 
     border-radius: 50%;
 
     font-size: 48px;
 
-    background: rgba(255,255,255,.04);
+    background:
+        rgba(255,255,255,.04);
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
 }
+
 
 .player-avatar {
     box-shadow:
-        0 0 35px rgba(0,234,255,.12);
+        0 0 35px
+        rgba(0,234,255,.12);
 }
+
 
 .cpu-avatar {
     box-shadow:
-        0 0 35px rgba(168,85,247,.12);
+        0 0 35px
+        rgba(168,85,247,.12);
 }
+
 
 .fighter h2 {
     font-size: 14px;
+
     letter-spacing: 4px;
 }
 
+
 .health {
     height: 6px;
+
     margin: 13px 0 8px;
 
     background: #171b30;
+
     border-radius: 20px;
+
     overflow: hidden;
 }
 
+
 .health div {
     height: 100%;
+
     width: 100%;
+
     transition: .5s;
 }
 
+
 #playerHealth {
     background: var(--cyan);
-    box-shadow: 0 0 12px var(--cyan);
+
+    box-shadow:
+        0 0 12px
+        var(--cyan);
 }
+
 
 #cpuHealth {
     background: var(--purple);
-    box-shadow: 0 0 12px var(--purple);
+
+    box-shadow:
+        0 0 12px
+        var(--purple);
 }
+
 
 .fighter-status {
     font-size: 8px;
+
     color: var(--muted);
+
     letter-spacing: 2px;
 }
+
 
 .score {
     margin-top: 15px;
 
     font-size: 40px;
+
     font-weight: 900;
 
     color: white;
 
     text-shadow:
-        0 0 20px rgba(255,255,255,.15);
+        0 0 20px
+        rgba(255,255,255,.15);
 }
 
 
-/* CENTER */
+/* =====================================
+   ARENA CENTER
+===================================== */
 
 .arena-center {
     text-align: center;
+
     position: relative;
+
     z-index: 2;
 }
 
+
 .round-info {
     color: var(--muted);
+
     font-size: 9px;
+
     letter-spacing: 3px;
 }
+
 
 .vs {
     margin: 15px 0;
 
     font-size: 50px;
+
     font-weight: 1000;
+
     font-style: italic;
 
     color: white;
 
     text-shadow:
         0 0 12px var(--cyan),
-        0 0 40px rgba(0,234,255,.35);
+        0 0 40px
+        rgba(0,234,255,.35);
 }
+
 
 .battle-status {
     min-height: 20px;
 
     font-size: 10px;
+
     font-weight: bold;
 
     letter-spacing: 2px;
+
     color: var(--cyan);
 }
 
+
 .progress-container {
     height: 3px;
+
     margin: 10px 20px;
 
     background: #181d34;
+
     border-radius: 10px;
+
     overflow: hidden;
 }
 
+
 .progress-container div {
     height: 100%;
+
     width: 0;
 
-    background: linear-gradient(
-        90deg,
-        var(--cyan),
-        var(--purple)
-    );
+    background:
+        linear-gradient(
+            90deg,
+            var(--cyan),
+            var(--purple)
+        );
 
-    transition: width .3s;
+    transition:
+        width .3s;
 }
+
 
 .battle-result {
     display: flex;
+
     justify-content: center;
+
     align-items: center;
+
     gap: 12px;
 
     margin-top: 20px;
 }
+
 
 .move-display {
     width: 55px;
     height: 55px;
 
     display: grid;
+
     place-items: center;
 
     border-radius: 15px;
 
     font-size: 25px;
 
-    background: rgba(255,255,255,.04);
-    border: 1px solid var(--border);
+    background:
+        rgba(255,255,255,.04);
+
+    border:
+        1px solid var(--border);
 }
+
 
 .result-symbol {
     color: var(--muted);
 }
 
 
-/* =========================
+/* =====================================
    CHOICES
-========================= */
+===================================== */
 
 .choice-section {
     margin-top: 15px;
 }
 
+
 .section-title {
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
 
     margin-bottom: 10px;
 
     color: var(--muted);
+
     font-size: 9px;
+
     letter-spacing: 3px;
 }
+
 
 .section-title small {
     color: #59637f;
 }
 
+
 .choices {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
     gap: 12px;
 }
+
 
 .choice {
     min-height: 130px;
@@ -847,7 +1216,9 @@ select {
             rgba(10,14,29,.9)
         );
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
+
     border-radius: 18px;
 
     cursor: pointer;
@@ -858,13 +1229,16 @@ select {
         box-shadow .25s;
 
     position: relative;
+
     overflow: hidden;
 }
+
 
 .choice::after {
     content: "";
 
     position: absolute;
+
     width: 150px;
     height: 150px;
 
@@ -872,183 +1246,263 @@ select {
     right: -100px;
 
     border-radius: 50%;
-    background: rgba(255,255,255,.05);
+
+    background:
+        rgba(255,255,255,.05);
 }
+
 
 .choice:hover {
-    transform: translateY(-7px);
+    transform:
+        translateY(-7px);
 
-    border-color: var(--cyan);
+    border-color:
+        var(--cyan);
 
     box-shadow:
-        0 12px 40px rgba(0,234,255,.12);
+        0 12px 40px
+        rgba(0,234,255,.12);
 }
 
+
 .choice:active {
-    transform: translateY(-2px) scale(.98);
+    transform:
+        translateY(-2px)
+        scale(.98);
 }
+
 
 .choice-icon {
     font-size: 40px;
+
     margin-bottom: 8px;
 }
 
+
 .choice strong {
     display: block;
+
     letter-spacing: 3px;
+
     font-size: 11px;
 }
 
+
 .choice small {
     display: block;
+
     margin-top: 5px;
+
     color: var(--muted);
+
     font-size: 8px;
 }
+
 
 .message {
     text-align: center;
 
     min-height: 20px;
+
     margin-top: 12px;
 
     color: var(--muted);
+
     font-size: 11px;
 }
 
 
-/* =========================
+/* =====================================
    DASHBOARD
-========================= */
+===================================== */
 
 .dashboard {
     display: grid;
-    grid-template-columns: 1fr 1.4fr 1fr;
+
+    grid-template-columns:
+        1fr 1.4fr 1fr;
+
     gap: 15px;
 
     margin-top: 15px;
 }
 
+
 .dashboard-card {
     padding: 18px;
 
     background: var(--panel);
-    border: 1px solid var(--border);
+
+    border:
+        1px solid var(--border);
+
     border-radius: 18px;
 }
 
+
 .card-title {
     display: flex;
+
     gap: 8px;
+
     align-items: center;
 
     margin-bottom: 15px;
 
     font-size: 9px;
+
     letter-spacing: 2px;
+
     color: #b8c2df;
 }
 
+
 .stats {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
     gap: 10px;
 }
+
 
 .stats div {
     padding: 12px;
 
     text-align: center;
 
-    background: rgba(255,255,255,.025);
+    background:
+        rgba(255,255,255,.025);
+
     border-radius: 10px;
 }
 
+
 .stats strong {
     display: block;
+
     font-size: 23px;
 }
 
+
 .stats span {
     font-size: 7px;
+
     color: var(--muted);
+
     letter-spacing: 1px;
 }
 
+
 .achievements {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
     gap: 7px;
 }
+
 
 .achievement {
     padding: 9px;
 
     border-radius: 9px;
 
-    background: rgba(255,255,255,.025);
-    border: 1px solid transparent;
+    background:
+        rgba(255,255,255,.025);
+
+    border:
+        1px solid transparent;
 }
 
+
 .achievement.unlocked {
-    border-color: rgba(0,234,255,.2);
-    background: rgba(0,234,255,.05);
+    border-color:
+        rgba(0,234,255,.2);
+
+    background:
+        rgba(0,234,255,.05);
 }
+
 
 .achievement-icon {
     font-size: 17px;
 }
 
+
 .achievement strong {
     display: block;
+
     font-size: 8px;
+
     margin-top: 4px;
 }
 
+
 .achievement small {
     display: block;
+
     color: var(--muted);
+
     font-size: 7px;
+
     margin-top: 2px;
 }
 
+
 .history {
     max-height: 150px;
+
     overflow-y: auto;
 }
 
+
 .history-row {
     display: flex;
+
     justify-content: space-between;
 
     padding: 7px 0;
 
-    border-bottom: 1px solid rgba(255,255,255,.05);
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.05);
 
     font-size: 9px;
 }
+
 
 .history-row.win {
     color: var(--green);
 }
 
+
 .history-row.lose {
     color: var(--red);
 }
+
 
 .history-row.draw {
     color: var(--yellow);
 }
 
+
 .empty-history {
     color: var(--muted);
+
     font-size: 10px;
+
     text-align: center;
+
     padding: 30px 0;
 }
 
 
-/* FOOTER */
+/* =====================================
+   FOOTER
+===================================== */
 
 footer {
     text-align: center;
@@ -1056,12 +1510,16 @@ footer {
     margin-top: 25px;
 
     color: #414a65;
+
     font-size: 8px;
+
     letter-spacing: 3px;
 }
 
 
-/* TOAST */
+/* =====================================
+   TOAST
+===================================== */
 
 .toast {
     position: fixed;
@@ -1071,17 +1529,25 @@ footer {
 
     padding: 14px 20px;
 
-    background: rgba(12,18,37,.95);
-    border: 1px solid var(--cyan);
+    background:
+        rgba(12,18,37,.95);
+
+    border:
+        1px solid var(--cyan);
+
     border-radius: 12px;
 
     color: white;
+
     font-size: 11px;
 
     box-shadow:
-        0 0 25px rgba(0,234,255,.2);
+        0 0 25px
+        rgba(0,234,255,.2);
 
-    transform: translateY(100px);
+    transform:
+        translateY(100px);
+
     opacity: 0;
 
     transition: .4s;
@@ -1089,32 +1555,43 @@ footer {
     z-index: 200;
 }
 
+
 .toast.show {
-    transform: translateY(0);
+    transform:
+        translateY(0);
+
     opacity: 1;
 }
 
 
-/* =========================
-   RESULT EFFECT
-========================= */
+/* =====================================
+   WIN / LOSE EFFECT
+===================================== */
 
 .win {
-    animation: winPulse .5s;
+    animation:
+        winPulse .5s;
 }
+
 
 .lose {
-    animation: loseShake .5s;
+    animation:
+        loseShake .5s;
 }
 
+
 @keyframes winPulse {
+
     0% {
         transform: scale(1);
     }
 
     50% {
         transform: scale(1.05);
-        box-shadow: 0 0 40px rgba(0,255,157,.3);
+
+        box-shadow:
+            0 0 40px
+            rgba(0,255,157,.3);
     }
 
     100% {
@@ -1122,8 +1599,11 @@ footer {
     }
 }
 
+
 @keyframes loseShake {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateX(0);
     }
 
@@ -1137,9 +1617,9 @@ footer {
 }
 
 
-/* =========================
+/* =====================================
    RESPONSIVE
-========================= */
+===================================== */
 
 @media (max-width: 900px) {
 
@@ -1147,45 +1627,62 @@ footer {
         grid-template-columns: 1fr;
     }
 
+
     .arena-center {
         order: -1;
     }
 
+
     .fighter {
         display: grid;
-        grid-template-columns: auto 1fr auto;
+
+        grid-template-columns:
+            auto 1fr auto;
+
         align-items: center;
+
         gap: 15px;
 
         text-align: left;
     }
 
+
     .fighter-top {
-        grid-column: 1 / -1;
+        grid-column:
+            1 / -1;
     }
+
 
     .fighter-avatar {
         width: 65px;
         height: 65px;
+
         margin: 0;
+
         font-size: 30px;
     }
+
 
     .fighter h2 {
         margin: 0;
     }
 
+
     .health {
-        grid-column: 1 / -1;
+        grid-column:
+            1 / -1;
     }
+
 
     .fighter-status {
         display: none;
     }
 
+
     .score {
         margin: 0;
     }
+
 
     .dashboard {
         grid-template-columns: 1fr;
@@ -1197,74 +1694,95 @@ footer {
 
     .game-screen {
         width: 94%;
+
         padding-top: 10px;
     }
+
 
     .topbar {
         padding: 12px;
     }
 
+
     .brand h1 {
         font-size: 14px;
     }
+
 
     .brand p {
         display: none;
     }
 
+
     .profile-info {
         min-width: 100px;
     }
 
+
     .hud {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(2, 1fr);
     }
+
 
     .control-panel {
         flex-wrap: wrap;
     }
 
+
     .control-panel > div {
-        flex-basis: calc(50% - 6px);
+        flex-basis:
+            calc(50% - 6px);
     }
+
 
     .reset-button {
         width: 100%;
     }
 
+
     .arena {
         padding: 12px;
+
         min-height: auto;
     }
+
 
     .vs {
         font-size: 35px;
     }
 
+
     .choices {
         gap: 7px;
     }
+
 
     .choice {
         min-height: 105px;
     }
 
+
     .choice-icon {
         font-size: 32px;
     }
+
 
     .choice strong {
         font-size: 9px;
     }
 
+
     .achievement small {
         display: none;
     }
+
 
     .toast {
         left: 15px;
         right: 15px;
         bottom: 15px;
+
         text-align: center;
     }
 }
@@ -1276,20 +1794,26 @@ footer {
         font-size: 50px;
     }
 
+
     .start-panel {
-        padding: 40px 22px;
+        padding:
+            40px 22px;
     }
 
+
     .fighter {
-        grid-template-columns: 55px 1fr auto;
+        grid-template-columns:
+            55px 1fr auto;
     }
+
 
     .fighter-avatar {
         width: 55px;
         height: 55px;
     }
 
+
     .fighter h2 {
         font-size: 11px;
     }
-    }
+}
