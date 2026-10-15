@@ -3,104 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siêu Cấp Oẳn Tù Tì - PC Ultimate Edition</title>
+    <title>Oẳn Tù Tì - PC Sci-Fi Command Center</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://googleapis.com" rel="stylesheet">
 </head>
 <body>
+    <!-- Lớp phủ tạo hiệu ứng sọc màn hình quét quét cổ điển/viễn tưởng -->
+    <div class="scanlines"></div>
+    <!-- Hệ thống hạt ánh sáng kỹ thuật số chạy ngầm -->
     <canvas id="particle-canvas"></canvas>
 
-    <!-- Header Tổng của Game -->
-    <header class="pc-header">
-        <div class="tournament-badge">TOURNAMENT PRO SYSTEM: FIRST TO 5</div>
-        <h1>OẲN TÙ TÌ</h1>
-    </header>
+    <div class="hud-main-frame">
+        <!-- Các góc định vị mục tiêu (Targeting Brackets) tạo cảm giác HUD quân sự -->
+        <div class="corner-bracket top-left"></div>
+        <div class="corner-bracket top-right"></div>
+        <div class="corner-bracket bottom-left"></div>
+        <div class="corner-bracket bottom-right"></div>
 
-    <!-- Layout chia 3 vùng tháp chỉ huy chính trên PC -->
-    <main class="pc-layout">
-        
-        <!-- CỘT TRÁI: BẢNG ĐIỀU KHIỂN & PHÍM TẮT -->
-        <section class="pc-panel control-panel">
-            <h2 class="panel-title">HỆ THỐNG ĐIỀU KHIỂN</h2>
-            <div class="shortcut-tip">Mẹo: Sử dụng phím tắt <span class="key-badge">1</span>, <span class="key-badge">2</span>, <span class="key-badge">3</span> trên bàn phím</div>
-            
-            <div class="action-buttons">
-                <button class="btn" id="rock" data-choice="rock">
-                    <span class="btn-emoji">✊</span>
-                    <div class="btn-info">
-                        <span class="btn-name">BÚA</span>
-                        <span class="btn-key">[Phím 1]</span>
+        <header class="hud-header">
+            <div class="sys-status"><span class="blink-dot"></span> SYSTEM ACTIVE // SECURE_LINE</div>
+            <h1>OẲN TÙ TÌ</h1>
+            <div class="match-objective">OBJECTIVE: REACH 5 POINTS TO OVERRIDE</div>
+        </header>
+
+        <div class="core-grid">
+            <!-- PHÂN KHU 1: BẢNG TRẠNG THÁI VÀ ĐIỂM SỐ -->
+            <section class="hud-section score-zone">
+                <div class="panel-header">CORE_SCORE_MODULE</div>
+                <div class="score-display">
+                    <div class="user-side">
+                        <span class="pilot-tag">PILOT [YOU]</span>
+                        <div id="player-score" class="digital-num">0</div>
                     </div>
-                </button>
-                <button class="btn" id="paper" data-choice="paper">
-                    <span class="btn-emoji">✋</span>
-                    <div class="btn-info">
-                        <span class="btn-name">BAO</span>
-                        <span class="btn-key">[Phím 2]</span>
+                    <div class="arena-phase">
+                        <div id="round-counter">PHASE 01</div>
+                        <div class="vs-text">V S</div>
                     </div>
-                </button>
-                <button class="btn" id="scissors" data-choice="scissors">
-                    <span class="btn-emoji">✌️</span>
-                    <div class="btn-info">
-                        <span class="btn-name">KÉO</span>
-                        <span class="btn-key">[Phím 3]</span>
+                    <div class="cpu-side">
+                        <span class="pilot-tag">MAINFRAME [CPU]</span>
+                        <div id="computer-score" class="digital-num">0</div>
                     </div>
-                </button>
-            </div>
-            <button id="reset-btn" class="reset-button">RESET HỆ THỐNG [R]</button>
-        </section>
-
-        <!-- CỘT GIỮA: TRUNG TÂM SÀN ĐẤU (Bảng điểm & Đòn đánh) -->
-        <section class="pc-panel arena-panel">
-            <div class="score-board">
-                <div class="score-card">
-                    <span class="score-label">Người Chơi</span>
-                    <span id="player-score" class="score-number">0</span>
                 </div>
-                <div class="vs-badge" id="round-counter">ROUND 1</div>
-                <div class="score-card">
-                    <span class="score-label">Máy Chủ</span>
-                    <span id="computer-score" class="score-number">0</span>
+            </section>
+
+            <!-- PHÂN KHU 2: VŨ ĐÀI QUYẾT ĐẤU HOLOGRAM -->
+            <section class="hud-section arena-zone">
+                <div class="panel-header">HOLOGRAM_VISUALIZER</div>
+                <div class="stage-view">
+                    <div class="holo-pod" id="p-display">
+                        <div class="pod-label">SIG_PLAYER</div>
+                        <div id="player-choice-icon" class="holo-projection">❓</div>
+                    </div>
+                    <div class="holo-pod" id="c-display">
+                        <div class="pod-label">SIG_COMPUTER</div>
+                        <div id="computer-choice-icon" class="holo-projection">❓</div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="battle-ground">
-                <div class="choice-display" id="p-display">
-                    <p>Đòn Đánh Của Bạn</p>
-                    <div id="player-choice-icon" class="status-emoji">❓</div>
+                <div class="terminal-output">
+                    <p id="game-status">> AWAITING OPERATOR INPUT... CHOOSE WEAPON KEYS [1, 2, 3]</p>
                 </div>
-                <div class="choice-display" id="c-display">
-                    <p>Phản Ứng Của Máy</p>
-                    <div id="computer-choice-icon" class="status-emoji">❓</div>
+            </section>
+
+            <!-- PHÂN KHU 3: BÀN PHÍM ĐIỀU KHIỂN CƠ KHÍ & LOG -->
+            <section class="hud-section console-zone">
+                <div class="panel-header">WEAPON_SELECTION_MATRIX</div>
+                <div class="weapon-matrix">
+                    <button class="cyber-btn" id="rock" data-choice="rock">
+                        <span class="btn-glow-line"></span>
+                        <span class="matrix-id">01/</span>
+                        <span class="matrix-icon">✊</span>
+                        <span class="matrix-name">BÚA</span>
+                    </button>
+                    <button class="cyber-btn" id="paper" data-choice="paper">
+                        <span class="btn-glow-line"></span>
+                        <span class="matrix-id">02/</span>
+                        <span class="matrix-icon">✋</span>
+                        <span class="matrix-name">BAO</span>
+                    </button>
+                    <button class="cyber-btn" id="scissors" data-choice="scissors">
+                        <span class="btn-glow-line"></span>
+                        <span class="matrix-id">03/</span>
+                        <span class="matrix-icon">✌️</span>
+                        <span class="matrix-name">KÉO</span>
+                    </button>
                 </div>
-            </div>
+                
+                <!-- Nhật ký tích hợp gọn bên dưới panel điều khiển -->
+                <div class="mini-log-panel">
+                    <ul id="history-log">
+                        <li class="empty-log">> COLD_BOOT: System initialized. No logs recorded.</li>
+                    </ul>
+                </div>
 
-            <div class="result-message">
-                <p id="game-status">VŨ ĐÀI SẴN SÀNG • NHẤN PHÍM RA ĐÒN!</p>
-            </div>
-        </section>
-
-        <!-- CỘT PHẢI: LOG NHẬT KÝ CHIẾN TRƯỜNG -->
-        <section class="pc-panel history-panel">
-            <h2 class="panel-title">NHẬT KÝ CHIẾN TRƯỜNG</h2>
-            <div class="history-container">
-                <ul id="history-log">
-                    <li class="empty-log">Hệ thống trống...</li>
-                </ul>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Modal Kết Thúc Trận Đấu -->
-    <div id="victory-modal" class="modal">
-        <div class="modal-content">
-            <h2 id="modal-title">CHIẾN THẮNG!</h2>
-            <p id="modal-summary">Bạn đã hạ gục máy chủ thành công.</p>
-            <button id="modal-close-btn" class="modal-btn">TIẾP TỤC GIẢI MỚI [Enter]</button>
+                <button id="reset-btn" class="abort-button">ABORT_SYSTEM_REBOOT [R]</button>
+            </section>
         </div>
     </div>
-    
+
+    <!-- Màn hình khẩn cấp kết thúc giải đấu -->
+    <div id="victory-modal" class="modal">
+        <div class="modal-content">
+            <div class="alert-banner">SYSTEM OVERRIDE DETECTED</div>
+            <h2 id="modal-title">VICTORY</h2>
+            <p id="modal-summary">Mainframe successfully bypassed.</p>
+            <button id="modal-close-btn" class="modal-action-btn">RE-ENGAGE SYSTEM [Enter]</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
