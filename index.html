@@ -3,60 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siêu Cấp Oẳn Tù Tì - Prime Edition</title>
+    <title>Siêu Cấp Oẳn Tù Tì - Pro Tournament</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Nhúng Font chữ điện tử từ Google Fonts -->
     <link href="https://googleapis.com" rel="stylesheet">
 </head>
 <body>
+    <!-- Canvas tạo hiệu ứng hạt Neon lơ lửng phía sau nền -->
+    <canvas id="particle-canvas"></canvas>
+
     <div class="game-container">
+        <!-- Chế độ giải đấu hiển thị mục tiêu điểm -->
+        <div class="tournament-badge">TOURNAMENT MODE: FIRST TO 5</div>
+        
         <h1>OẲN TÙ TÌ</h1>
         
-        <!-- Bảng điểm phong cách Esport Premium -->
         <div class="score-board">
             <div class="score-card">
                 <span class="score-label">Bạn</span>
                 <span id="player-score" class="score-number">0</span>
             </div>
-            <div class="vs-badge">VS</div>
+            <div class="vs-badge" id="round-counter">RÓND 1</div>
             <div class="score-card">
                 <span class="score-label">Máy</span>
                 <span id="computer-score" class="score-number">0</span>
             </div>
         </div>
 
-        <!-- Sàn đấu mô phỏng Hologram kỹ thuật số -->
         <div class="battle-ground">
-            <div class="choice-display">
+            <div class="choice-display" id="p-display">
                 <p>Lựa chọn của bạn</p>
                 <div id="player-choice-icon" class="status-emoji">❓</div>
             </div>
-            <div class="choice-display">
+            <div class="choice-display" id="c-display">
                 <p>Lựa chọn của Máy</p>
                 <div id="computer-choice-icon" class="status-emoji">❓</div>
             </div>
         </div>
 
-        <!-- Hộp thông báo trạng thái kết quả trận đấu -->
         <div class="result-message">
-            <p id="game-status">CHỌN VŨ KHÍ ĐỂ KÍCH HOẠT HỆ THỐNG!</p>
+            <p id="game-status">HỆ THỐNG SẴN SÀNG • KHỞI TRANH!</p>
         </div>
 
-        <!-- Khu vực các nút bấm hành động Prime phát sáng -->
         <div class="action-buttons">
             <button class="btn" id="rock" data-choice="rock">
-                <span class="btn-emoji">✊</span> Búa
+                <span class="btn-emoji">✊</span> BÚA
             </button>
             <button class="btn" id="paper" data-choice="paper">
-                <span class="btn-emoji">✋</span> Bao
+                <span class="btn-emoji">✋</span> BAO
             </button>
             <button class="btn" id="scissors" data-choice="scissors">
-                <span class="btn-emoji">✌️</span> Kéo
+                <span class="btn-emoji">✌️</span> KÉO
             </button>
         </div>
+
+        <!-- Bảng hiển thị Lịch sử chuỗi trận đấu -->
+        <div class="history-container">
+            <h3>LỊCH SỬ THI ĐẤU (GẦN NHẤT)</h3>
+            <ul id="history-log">
+                <li class="empty-log">Chưa có dữ liệu trận đấu</li>
+            </ul>
+        </div>
         
-        <!-- Nút chơi lại để reset điểm số -->
-        <button id="reset-btn" class="reset-button">Khởi động lại hệ thống</button>
+        <button id="reset-btn" class="reset-button">RESET HỆ THỐNG</button>
+    </div>
+
+    <!-- Màn hình Modal thông báo kết thúc giải đấu khi chạm 5 điểm -->
+    <div id="victory-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">CHIẾN THẮNG!</h2>
+            <p id="modal-summary">Bạn đã đánh bại máy với tỷ số 5 - 3</p>
+            <button id="modal-close-btn" class="modal-btn">TIẾP TỤC GIẢI MỚI</button>
+        </div>
     </div>
     
     <script src="script.js"></script>
