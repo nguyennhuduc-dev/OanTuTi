@@ -3,76 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siêu Cấp Oẳn Tù Tì - Pro Tournament</title>
+    <title>Siêu Cấp Oẳn Tù Tì - PC Ultimate Edition</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://googleapis.com" rel="stylesheet">
 </head>
 <body>
-    <!-- Canvas tạo hiệu ứng hạt Neon lơ lửng phía sau nền -->
     <canvas id="particle-canvas"></canvas>
 
-    <div class="game-container">
-        <!-- Chế độ giải đấu hiển thị mục tiêu điểm -->
-        <div class="tournament-badge">TOURNAMENT MODE: FIRST TO 5</div>
-        
+    <!-- Header Tổng của Game -->
+    <header class="pc-header">
+        <div class="tournament-badge">TOURNAMENT PRO SYSTEM: FIRST TO 5</div>
         <h1>OẲN TÙ TÌ</h1>
+    </header>
+
+    <!-- Layout chia 3 vùng tháp chỉ huy chính trên PC -->
+    <main class="pc-layout">
         
-        <div class="score-board">
-            <div class="score-card">
-                <span class="score-label">Bạn</span>
-                <span id="player-score" class="score-number">0</span>
+        <!-- CỘT TRÁI: BẢNG ĐIỀU KHIỂN & PHÍM TẮT -->
+        <section class="pc-panel control-panel">
+            <h2 class="panel-title">HỆ THỐNG ĐIỀU KHIỂN</h2>
+            <div class="shortcut-tip">Mẹo: Sử dụng phím tắt <span class="key-badge">1</span>, <span class="key-badge">2</span>, <span class="key-badge">3</span> trên bàn phím</div>
+            
+            <div class="action-buttons">
+                <button class="btn" id="rock" data-choice="rock">
+                    <span class="btn-emoji">✊</span>
+                    <div class="btn-info">
+                        <span class="btn-name">BÚA</span>
+                        <span class="btn-key">[Phím 1]</span>
+                    </div>
+                </button>
+                <button class="btn" id="paper" data-choice="paper">
+                    <span class="btn-emoji">✋</span>
+                    <div class="btn-info">
+                        <span class="btn-name">BAO</span>
+                        <span class="btn-key">[Phím 2]</span>
+                    </div>
+                </button>
+                <button class="btn" id="scissors" data-choice="scissors">
+                    <span class="btn-emoji">✌️</span>
+                    <div class="btn-info">
+                        <span class="btn-name">KÉO</span>
+                        <span class="btn-key">[Phím 3]</span>
+                    </div>
+                </button>
             </div>
-            <div class="vs-badge" id="round-counter">RÓND 1</div>
-            <div class="score-card">
-                <span class="score-label">Máy</span>
-                <span id="computer-score" class="score-number">0</span>
+            <button id="reset-btn" class="reset-button">RESET HỆ THỐNG [R]</button>
+        </section>
+
+        <!-- CỘT GIỮA: TRUNG TÂM SÀN ĐẤU (Bảng điểm & Đòn đánh) -->
+        <section class="pc-panel arena-panel">
+            <div class="score-board">
+                <div class="score-card">
+                    <span class="score-label">Người Chơi</span>
+                    <span id="player-score" class="score-number">0</span>
+                </div>
+                <div class="vs-badge" id="round-counter">ROUND 1</div>
+                <div class="score-card">
+                    <span class="score-label">Máy Chủ</span>
+                    <span id="computer-score" class="score-number">0</span>
+                </div>
             </div>
-        </div>
 
-        <div class="battle-ground">
-            <div class="choice-display" id="p-display">
-                <p>Lựa chọn của bạn</p>
-                <div id="player-choice-icon" class="status-emoji">❓</div>
+            <div class="battle-ground">
+                <div class="choice-display" id="p-display">
+                    <p>Đòn Đánh Của Bạn</p>
+                    <div id="player-choice-icon" class="status-emoji">❓</div>
+                </div>
+                <div class="choice-display" id="c-display">
+                    <p>Phản Ứng Của Máy</p>
+                    <div id="computer-choice-icon" class="status-emoji">❓</div>
+                </div>
             </div>
-            <div class="choice-display" id="c-display">
-                <p>Lựa chọn của Máy</p>
-                <div id="computer-choice-icon" class="status-emoji">❓</div>
+
+            <div class="result-message">
+                <p id="game-status">VŨ ĐÀI SẴN SÀNG • NHẤN PHÍM RA ĐÒN!</p>
             </div>
-        </div>
+        </section>
 
-        <div class="result-message">
-            <p id="game-status">HỆ THỐNG SẴN SÀNG • KHỞI TRANH!</p>
-        </div>
+        <!-- CỘT PHẢI: LOG NHẬT KÝ CHIẾN TRƯỜNG -->
+        <section class="pc-panel history-panel">
+            <h2 class="panel-title">NHẬT KÝ CHIẾN TRƯỜNG</h2>
+            <div class="history-container">
+                <ul id="history-log">
+                    <li class="empty-log">Hệ thống trống...</li>
+                </ul>
+            </div>
+        </section>
 
-        <div class="action-buttons">
-            <button class="btn" id="rock" data-choice="rock">
-                <span class="btn-emoji">✊</span> BÚA
-            </button>
-            <button class="btn" id="paper" data-choice="paper">
-                <span class="btn-emoji">✋</span> BAO
-            </button>
-            <button class="btn" id="scissors" data-choice="scissors">
-                <span class="btn-emoji">✌️</span> KÉO
-            </button>
-        </div>
+    </main>
 
-        <!-- Bảng hiển thị Lịch sử chuỗi trận đấu -->
-        <div class="history-container">
-            <h3>LỊCH SỬ THI ĐẤU (GẦN NHẤT)</h3>
-            <ul id="history-log">
-                <li class="empty-log">Chưa có dữ liệu trận đấu</li>
-            </ul>
-        </div>
-        
-        <button id="reset-btn" class="reset-button">RESET HỆ THỐNG</button>
-    </div>
-
-    <!-- Màn hình Modal thông báo kết thúc giải đấu khi chạm 5 điểm -->
+    <!-- Modal Kết Thúc Trận Đấu -->
     <div id="victory-modal" class="modal">
         <div class="modal-content">
             <h2 id="modal-title">CHIẾN THẮNG!</h2>
-            <p id="modal-summary">Bạn đã đánh bại máy với tỷ số 5 - 3</p>
-            <button id="modal-close-btn" class="modal-btn">TIẾP TỤC GIẢI MỚI</button>
+            <p id="modal-summary">Bạn đã hạ gục máy chủ thành công.</p>
+            <button id="modal-close-btn" class="modal-btn">TIẾP TỤC GIẢI MỚI [Enter]</button>
         </div>
     </div>
     
