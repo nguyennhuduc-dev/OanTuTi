@@ -3,110 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oẳn Tù Tì - PC Sci-Fi Command Center</title>
+    <title>Oẳn Tù Tì - Cyber Arena Alpha</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://googleapis.com" rel="stylesheet">
 </head>
 <body>
-    <!-- Lớp phủ tạo hiệu ứng sọc màn hình quét quét cổ điển/viễn tưởng -->
     <div class="scanlines"></div>
-    <!-- Hệ thống hạt ánh sáng kỹ thuật số chạy ngầm -->
     <canvas id="particle-canvas"></canvas>
 
-    <div class="hud-main-frame">
-        <!-- Các góc định vị mục tiêu (Targeting Brackets) tạo cảm giác HUD quân sự -->
-        <div class="corner-bracket top-left"></div>
-        <div class="corner-bracket top-right"></div>
-        <div class="corner-bracket bottom-left"></div>
-        <div class="corner-bracket bottom-right"></div>
+    <!-- SECTION 1: SẢNH LOBBY CÔNG NGHỆ CAO -->
+    <div id="lobby-screen" class="hud-window">
+        <div class="bracket-tag">// MAINFRAME_LOBBY_V1.2</div>
+        <h1 class="glitch-title">CYBER ARENA</h1>
+        
+        <div class="lobby-grid">
+            <!-- Khu vực thiết lập hồ sơ người chơi -->
+            <div class="lobby-panel profile-setup">
+                <div class="panel-label">CẤU HÌNH PHI CÔNG [PILOT_PROFILES]</div>
+                <div class="input-group">
+                    <label>> NHẬP TÊN MẬT DANH:</label>
+                    <input type="text" id="pilot-name" value="PILOT_01" maxlength="12">
+                </div>
+            </div>
 
-        <header class="hud-header">
-            <div class="sys-status"><span class="blink-dot"></span> SYSTEM ACTIVE // SECURE_LINE</div>
-            <h1>OẲN TÙ TÌ</h1>
-            <div class="match-objective">OBJECTIVE: REACH 5 POINTS TO OVERRIDE</div>
+            <!-- Khu vực lựa chọn Hệ phái (Factions) tăng tính chiến thuật -->
+            <div class="lobby-panel faction-selector">
+                <div class="panel-label">CHỌN HỆ PHÁI AN NINH MẠNG [CHOOSE_FACTION]</div>
+                <div class="faction-options">
+                    <div class="faction-card active" data-faction="cyber">
+                        <div class="faction-icon">⚡</div>
+                        <div class="faction-name">CYBER STRIKER</div>
+                        <p>Tăng cường xung điện cơ bản.</p>
+                    </div>
+                    <div class="faction-card" data-faction="neon">
+                        <div class="faction-icon">🔮</div>
+                        <div class="faction-name">NEON VANGUARD</div>
+                        <p>Lá chắn phản quang cao cấp.</p>
+                    </div>
+                    <div class="faction-card" data-faction="phantom">
+                        <div class="faction-icon">👻</div>
+                        <div class="faction-name">PHANTOM GHOST</div>
+                        <p>Ẩn hiện tàng hình trong bóng tối.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="find-match-btn" class="launch-btn">KÍCH HOẠT TÌM TRẬN [ENTER]</button>
+    </div>
+
+    <!-- SECTION 2: VŨ ĐÀI QUYẾT ĐẤU CHÍNH (BAN ĐẦU ẨN) -->
+    <div id="arena-screen" class="hud-window hide">
+        <div class="corner-bracket top-left"></div><div class="corner-bracket top-right"></div>
+        <div class="corner-bracket bottom-left"></div><div class="corner-bracket bottom-right"></div>
+
+        <header class="arena-header">
+            <div class="session-info"><span class="blink-dot"></span> MATCH_LIVE // PILOT: <span id="display-name">...</span></div>
+            <div class="faction-badge" id="display-faction">CYBER</div>
         </header>
 
-        <div class="core-grid">
-            <!-- PHÂN KHU 1: BẢNG TRẠNG THÁI VÀ ĐIỂM SỐ -->
-            <section class="hud-section score-zone">
-                <div class="panel-header">CORE_SCORE_MODULE</div>
-                <div class="score-display">
-                    <div class="user-side">
-                        <span class="pilot-tag">PILOT [YOU]</span>
-                        <div id="player-score" class="digital-num">0</div>
-                    </div>
-                    <div class="arena-phase">
-                        <div id="round-counter">PHASE 01</div>
-                        <div class="vs-text">V S</div>
-                    </div>
-                    <div class="cpu-side">
-                        <span class="pilot-tag">MAINFRAME [CPU]</span>
-                        <div id="computer-score" class="digital-num">0</div>
-                    </div>
+        <div class="arena-main-layout">
+            <!-- HỆ THỐNG THANH MÁU HP TIÊU CHUẨN TRÒ CHƠI ĐỐI KHÁNG -->
+            <div class="health-system">
+                <div class="hp-bar-wrapper">
+                    <span class="hp-name">YOU</span>
+                    <div class="hp-container"><div id="player-hp" class="hp-fill user-hp"></div></div>
                 </div>
-            </section>
+                <div class="round-indicator" id="phase-counter">PHASE 01</div>
+                <div class="hp-bar-wrapper">
+                    <span class="hp-name">MAINFRAME</span>
+                    <div class="hp-container"><div id="computer-hp" class="hp-fill cpu-hp"></div></div>
+                </div>
+            </div>
 
-            <!-- PHÂN KHU 2: VŨ ĐÀI QUYẾT ĐẤU HOLOGRAM -->
-            <section class="hud-section arena-zone">
-                <div class="panel-header">HOLOGRAM_VISUALIZER</div>
-                <div class="stage-view">
-                    <div class="holo-pod" id="p-display">
-                        <div class="pod-label">SIG_PLAYER</div>
-                        <div id="player-choice-icon" class="holo-projection">❓</div>
-                    </div>
-                    <div class="holo-pod" id="c-display">
-                        <div class="pod-label">SIG_COMPUTER</div>
-                        <div id="computer-choice-icon" class="holo-projection">❓</div>
-                    </div>
+            <!-- SÀN ĐẤU HOLOGRAM -->
+            <div class="hologram-deck">
+                <div class="pod" id="p-display">
+                    <div class="pod-tag">SIG_USER</div>
+                    <div id="player-choice-icon" class="projection">❓</div>
                 </div>
-                <div class="terminal-output">
-                    <p id="game-status">> AWAITING OPERATOR INPUT... CHOOSE WEAPON KEYS [1, 2, 3]</p>
+                <div class="pod" id="c-display">
+                    <div class="pod-tag">SIG_CPU</div>
+                    <div id="computer-choice-icon" class="projection">❓</div>
                 </div>
-            </section>
+            </div>
 
-            <!-- PHÂN KHU 3: BÀN PHÍM ĐIỀU KHIỂN CƠ KHÍ & LOG -->
-            <section class="hud-section console-zone">
-                <div class="panel-header">WEAPON_SELECTION_MATRIX</div>
-                <div class="weapon-matrix">
-                    <button class="cyber-btn" id="rock" data-choice="rock">
-                        <span class="btn-glow-line"></span>
-                        <span class="matrix-id">01/</span>
-                        <span class="matrix-icon">✊</span>
-                        <span class="matrix-name">BÚA</span>
-                    </button>
-                    <button class="cyber-btn" id="paper" data-choice="paper">
-                        <span class="btn-glow-line"></span>
-                        <span class="matrix-id">02/</span>
-                        <span class="matrix-icon">✋</span>
-                        <span class="matrix-name">BAO</span>
-                    </button>
-                    <button class="cyber-btn" id="scissors" data-choice="scissors">
-                        <span class="btn-glow-line"></span>
-                        <span class="matrix-id">03/</span>
-                        <span class="matrix-icon">✌️</span>
-                        <span class="matrix-name">KÉO</span>
-                    </button>
-                </div>
-                
-                <!-- Nhật ký tích hợp gọn bên dưới panel điều khiển -->
-                <div class="mini-log-panel">
-                    <ul id="history-log">
-                        <li class="empty-log">> COLD_BOOT: System initialized. No logs recorded.</li>
-                    </ul>
-                </div>
+            <div class="terminal-feed"><p id="game-status">> SYSTEM_STANDBY: Awaiting operational key inputs...</p></div>
 
-                <button id="reset-btn" class="abort-button">ABORT_SYSTEM_REBOOT [R]</button>
-            </section>
+            <div class="matrix-input">
+                <button class="action-node" id="rock" data-choice="rock">✊ BÚA <span class="key-hint">[1]</span></button>
+                <button class="action-node" id="paper" data-choice="paper">✋ BAO <span class="key-hint">[2]</span></button>
+                <button class="action-node" id="scissors" data-choice="scissors">✌️ KÉO <span class="key-hint">[3]</span></button>
+            </div>
+
+            <button id="abort-btn" class="quit-link">RÚT LUI VỀ LOBBY [ESC]</button>
         </div>
     </div>
 
-    <!-- Màn hình khẩn cấp kết thúc giải đấu -->
+    <!-- MODAL HIỂN THỊ KẾT QUẢ CUỐI TRẬN -->
     <div id="victory-modal" class="modal">
         <div class="modal-content">
-            <div class="alert-banner">SYSTEM OVERRIDE DETECTED</div>
+            <div class="alert-strip">MATCH_TERMINATED_OVERRIDE</div>
             <h2 id="modal-title">VICTORY</h2>
-            <p id="modal-summary">Mainframe successfully bypassed.</p>
-            <button id="modal-close-btn" class="modal-action-btn">RE-ENGAGE SYSTEM [Enter]</button>
+            <p id="modal-summary">Mainframe successfully neutralized.</p>
+            <button id="modal-close-btn" class="modal-reset-btn">QUAY LẠI PHÒNG CHỜ [ENTER]</button>
         </div>
     </div>
 
