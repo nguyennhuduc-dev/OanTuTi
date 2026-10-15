@@ -1,4 +1,4 @@
-// --- KHỞI TẠO ĐỒ HỌA HẠT CHẠY NGẦM ---
+// --- BỘ PHÁT HẠT MA TRẬN NỀN ---
 const canvas = document.getElementById('particle-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
@@ -14,19 +14,20 @@ class Particle {
     constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = Math.random() * 0.4 - 0.2;
-        this.speedY = Math.random() * -0.5 - 0.1;
-        this.color = Math.random() > 0.5 ? 'rgba(0, 243, 255, 0.25)' : 'rgba(217, 70, 239, 0.25)';
+        this.size = Math.random() * 1.5 + 0.5;
+        this.speedY = Math.random() * -0.4 - 0.1;
+        this.alpha = Math.random() * 0.5 + 0.2;
     }
     update() {
-        this.x += this.speedX;
         this.y += this.speedY;
         if (this.y < 0) { this.y = canvas.height; this.x = Math.random() * canvas.width; }
     }
-    draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+    draw() {
+        ctx.fillStyle = `rgba(0, 243, 255, ${this.alpha})`;
+        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+    }
 }
-for (let i = 0; i < 50; i++) particles.push(new Particle());
+for (let i = 0; i < 40; i++) particles.push(new Particle());
 function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach(p => { p.update(); p.draw(); });
@@ -34,38 +35,42 @@ function animateParticles() {
 }
 animateParticles();
 
-// --- BỘ ÂM THANH KỸ THUẬT SỐ ---
-const AudioEngine = {
+// --- AUDIO SYNTHESIZER ENGINE (Tạo sóng âm thanh Real-time) ---
+const SoundFX = {
     ctx: null,
     init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
-    play(type) {
+    play(mode) {
         this.init(); if (this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
         osc.connect(gain); gain.connect(this.ctx.destination);
-        const now = this.ctx.currentTime;
-        if (type === 'click') {
-            osc.frequency.setValueAtTime(450, now); gain.gain.setValueAtTime(0.08, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04); osc.start(now); osc.stop(now + 0.04);
-        } else if (type === 'win') {
-            osc.frequency.setValueAtTime(523.25, now); osc.frequency.setValueAtTime(659.25, now + 0.07);
-            gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
-            osc.start(now); osc.stop(now + 0.22);
-        } else if (type === 'lose') {
-            osc.frequency.setValueAtTime(220, now); osc.frequency.linearRampToValueAtTime(140, now + 0.18);
-            gain.gain.setValueAtTime(0.18, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
-            osc.start(now); osc.stop(now + 0.22);
-        } else if (type === 'draw') {
-            osc.frequency.setValueAtTime(280, now); gain.gain.setValueAtTime(0.08, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12); osc.start(now); osc.stop(now + 0.12);
+        const t = this.ctx.currentTime;
+        if (mode === 'click') {
+            osc.type = 'square'; osc.frequency.setValueAtTime(600, t);
+            gain.gain.setValueAtTime(0.04, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+            osc.start(t); osc.stop(t + 0.04);
+        } else if (mode === 'win') {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(587.33, t); // D5
+            osc.frequency.setValueAtTime(880, t + 0.06); // A5
+            gain.gain.setValueAtTime(0.1, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+            osc.start(t); osc.stop(t + 0.2);
+        } else if (mode === 'lose') {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, t);
+            osc.frequency.linearRampToValueAtTime(90, t + 0.2);
+            gain.gain.setValueAtTime(0.12, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+            osc.start(t); osc.stop(t + 0.22);
+        } else if (mode === 'draw') {
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(320, t);
+            gain.gain.setValueAtTime(0.06, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+            osc.start(t); osc.stop(t + 0.12);
         }
     }
 };
 
-// --- LOGIC ĐIỀU KHIỂN & ĐỒNG BỘ TRẠNG THÁI ---
-let playerScore = parseInt(localStorage.getItem('pc_playerScore')) || 0;
-let computerScore = parseInt(localStorage.getItem('pc_computerScore')) || 0;
-let roundCount = parseInt(localStorage.getItem('pc_roundCount')) || 1;
-let matchHistory = JSON.parse(localStorage.getItem('pc_matchHistory')) || [];
+// --- LOGIC HỆ THỐNG VÀ ĐỒNG BỘ LOCALSTORAGE ---
+let playerScore = parseInt(localStorage.getItem('hud_playerScore')) || 0;
+let computerScore = parseInt(localStorage.getItem('hud_computerScore')) || 0;
+let roundCount = parseInt(localStorage.getItem('hud_roundCount')) || 1;
+let matchHistory = JSON.parse(localStorage.getItem('hud_matchHistory')) || [];
 
 const emojiMap = { rock: '✊', paper: '✋', scissors: '✌️' };
 const viMap = { rock: 'BÚA', paper: 'BAO', scissors: 'KÉO' };
@@ -81,35 +86,35 @@ const modal = document.getElementById('victory-modal');
 
 playerScoreEl.textContent = playerScore;
 computerScoreEl.textContent = computerScore;
-roundCounterEl.textContent = `ROUND ${roundCount}`;
+roundCounterEl.textContent = `PHASE ${roundCount.toString().padStart(2, '0')}`;
 renderHistory();
 
-document.querySelectorAll('.btn').forEach(btn => {
+document.querySelectorAll('.cyber-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         if(playerScore === 5 || computerScore === 5) return;
-        AudioEngine.play('click');
+        SoundFX.play('click');
         playRound(btn.getAttribute('data-choice'));
     });
 });
 
-// TÍNH NĂNG ĐỘC QUYỀN TRÊN PC: HỆ THỐNG LẮNG NGHE PHÍM TẮT BÀN PHÍM (KEYBOARD SHORTCUTS)
+// LẮNG NGHE BÀN PHÍM CƠ
 window.addEventListener('keydown', (e) => {
     if (modal.classList.contains('show')) {
-        if (e.key === 'Enter') { AudioEngine.play('click'); modal.classList.remove('show'); resetGame(); }
+        if (e.key === 'Enter') { SoundFX.play('click'); modal.classList.remove('show'); resetGame(); }
         return;
     }
     if (playerScore === 5 || computerScore === 5) return;
     
-    if (e.key === '1') { AudioEngine.play('click'); playRound('rock'); triggerVisualFeedback('rock'); }
-    else if (e.key === '2') { AudioEngine.play('click'); playRound('paper'); triggerVisualFeedback('paper'); }
-    else if (e.key === '3') { AudioEngine.play('click'); playRound('scissors'); triggerVisualFeedback('scissors'); }
-    else if (e.key === 'r' || e.key === 'R') { AudioEngine.play('click'); resetGame(); }
+    if (e.key === '1') { SoundFX.play('click'); playRound('rock'); keyEffect('rock'); }
+    else if (e.key === '2') { SoundFX.play('click'); playRound('paper'); keyEffect('paper'); }
+    else if (e.key === '3') { SoundFX.play('click'); playRound('scissors'); keyEffect('scissors'); }
+    else if (e.key === 'r' || e.key === 'R') { SoundFX.play('click'); resetGame(); }
 });
 
-function triggerVisualFeedback(id) {
+function keyEffect(id) {
     const btn = document.getElementById(id);
-    btn.style.transform = 'scale(0.92)';
-    setTimeout(() => btn.style.transform = 'none', 100);
+    btn.style.background = 'rgba(0, 243, 255, 0.25)';
+    setTimeout(() => btn.style.background = '#0b0716', 120);
 }
 
 function playRound(playerChoice) {
@@ -117,74 +122,66 @@ function playRound(playerChoice) {
     playerIconEl.textContent = emojiMap[playerChoice];
     computerIconEl.textContent = emojiMap[computerChoice];
     
-    document.getElementById('p-display').classList.remove('winner-flash');
-    document.getElementById('c-display').classList.remove('winner-flash');
-    const arena = document.querySelector('.arena-panel');
-    arena.classList.remove('screen-shake');
-    void arena.offsetWidth;
-    arena.classList.add('screen-shake');
+    const zone = document.querySelector('.arena-zone');
+    zone.classList.remove('flash-hit'); void zone.offsetWidth; zone.classList.add('flash-hit');
 
     let res = '';
     if (playerChoice === computerChoice) {
-        res = 'draw'; gameStatusEl.textContent = "HỆ THỐNG HÒA • PHÁT ĐỀU LẠI VÒNG NÀY"; gameStatusEl.style.color = "#94a3b8"; AudioEngine.play('draw');
+        res = 'draw'; gameStatusEl.textContent = `> SIGNAL_MATCH_DRAW // BOTH DEPLOYED ${viMap[playerChoice]}`; gameStatusEl.style.color = "#94a3b8"; SoundFX.play('draw');
     } else if (
         (playerChoice === 'rock' && computerChoice === 'scissors') ||
         (playerChoice === 'paper' && computerChoice === 'rock') ||
         (playerChoice === 'scissors' && computerChoice === 'paper')
     ) {
         res = 'win'; playerScore++; playerScoreEl.textContent = playerScore;
-        document.getElementById('p-display').classList.add('winner-flash');
-        gameStatusEl.textContent = `BẠN GHI ĐIỂM! • ĐÒN ${viMap[playerChoice]} KHẮC CHẾ ${viMap[computerChoice]}`;
-        gameStatusEl.style.color = "#10b981"; AudioEngine.play('win');
+        gameStatusEl.textContent = `> CRITICAL_STRIKE // PILOT OVERRIDES WITH ${viMap[playerChoice]}`;
+        gameStatusEl.style.color = "#10b981"; SoundFX.play('win');
     } else {
         res = 'lose'; computerScore++; computerScoreEl.textContent = computerScore;
-        document.getElementById('c-display').classList.add('winner-flash');
-        gameStatusEl.textContent = `MÁY GHI ĐIỂM! • ĐÒN ${viMap[computerChoice]} PHẢN KHÁC ${viMap[playerChoice]}`;
-        gameStatusEl.style.color = "#ef4444"; AudioEngine.play('lose');
+        gameStatusEl.textContent = `> WARNING: SHIELD_BREACH // MAINFRAME DEPLOYED ${viMap[computerChoice]}`;
+        gameStatusEl.style.color = "#ef4444"; SoundFX.play('lose');
     }
 
-    roundCount++; roundCounterEl.textContent = `ROUND ${roundCount}`;
-    addHistoryLog(res, playerChoice, computerChoice);
-    saveState();
-    checkTournamentEnd();
+    roundCount++; roundCounterEl.textContent = `PHASE ${roundCount.toString().padStart(2, '0')}`;
+    addHistoryLog(res, playerChoice, computerChoice); saveState(); checkTournamentEnd();
 }
 
 function addHistoryLog(result, p, c) {
-    let text = result === 'win' ? 'CHIẾN THẮNG' : result === 'lose' ? 'BẠI TRẬN' : 'HÒA NHAU';
+    let text = result === 'win' ? 'SUCCESS' : result === 'lose' ? 'FAILED' : 'STABLE';
     let className = `log-${result}`;
-    matchHistory.unshift({ text: `[R${roundCount-1}] Bạn: ${viMap[p]} ⚔️ Máy: ${viMap[c]} → ${text}`, className });
-    if (matchHistory.length > 8) matchHistory.pop(); // Tăng sức chứa log lên 8 mục trên PC
+    matchHistory.unshift({ text: `> [P_${roundCount-1}] P_SIG:${viMap[p]} ⚔️ C_SIG:${viMap[c]} // STATUS:${text}`, className });
+    if (matchHistory.length > 4) matchHistory.pop();
     renderHistory();
 }
 
 function renderHistory() {
-    if (matchHistory.length === 0) { historyLogEl.innerHTML = '<li class="empty-log">Hệ thống trống...</li>'; return; }
+    if (matchHistory.length === 0) { historyLogEl.innerHTML = '<li class="empty-log">> COLD_BOOT: System initialized. No logs recorded.</li>'; return; }
     historyLogEl.innerHTML = matchHistory.map(item => `<li class="${item.className}">${item.text}</li>`).join('');
 }
 
 function saveState() {
-    localStorage.setItem('pc_playerScore', playerScore); localStorage.setItem('pc_computerScore', computerScore);
-    localStorage.setItem('pc_roundCount', roundCount); localStorage.setItem('pc_matchHistory', JSON.stringify(matchHistory));
+    localStorage.setItem('hud_playerScore', playerScore); localStorage.setItem('hud_computerScore', computerScore);
+    localStorage.setItem('hud_roundCount', roundCount); localStorage.setItem('hud_matchHistory', JSON.stringify(matchHistory));
 }
 
 function checkTournamentEnd() {
     if (playerScore === 5 || computerScore === 5) {
         const isWin = playerScore === 5;
-        document.getElementById('modal-title').textContent = isWin ? "VICTORY!" : "DEFEAT";
+        document.getElementById('modal-title').textContent = isWin ? "ACCESS GRANTED" : "SYSTEM LOCKED";
         document.getElementById('modal-title').style.color = isWin ? "#10b981" : "#ef4444";
-        document.getElementById('modal-summary').textContent = `Chiến dịch hoàn thành với tỷ số chung cuộc ${playerScore} - ${computerScore}`;
+        document.getElementById('victory-modal').style.borderColor = isWin ? "#10b981" : "#ef4444";
+        document.getElementById('modal-summary').textContent = `Mainframe interaction concluded with final status: ${playerScore} - ${computerScore}`;
         modal.classList.add('show');
     }
 }
 
 function resetGame() {
     playerScore = 0; computerScore = 0; roundCount = 1; matchHistory = [];
-    playerScoreEl.textContent = '0'; computerScoreEl.textContent = '0'; roundCounterEl.textContent = 'ROUND 1';
+    playerScoreEl.textContent = '0'; computerScoreEl.textContent = '0'; roundCounterEl.textContent = 'PHASE 01';
     playerIconEl.textContent = '❓'; computerIconEl.textContent = '❓';
-    gameStatusEl.textContent = 'VŨ ĐÀI SẴN SÀNG • NHẤN PHÍM RA ĐÒN!'; gameStatusEl.style.color = "#e2e8f0";
-    document.getElementById('p-display').classList.remove('winner-flash'); document.getElementById('c-display').classList.remove('winner-flash');
+    gameStatusEl.textContent = '> AWAITING OPERATOR INPUT... CHOOSE WEAPON KEYS [1, 2, 3]'; gameStatusEl.style.color = "#00f3ff";
     renderHistory(); saveState();
 }
 
 document.getElementById('reset-btn').addEventListener('click', resetGame);
-document.getElementById('modal-close-btn').addEventListener('click', () => { modal.classList.remove('remove'); resetGame(); });
+document.getElementById('modal-close-btn').addEventListener('click', () => { modal.classList.remove('show'); resetGame(); });
