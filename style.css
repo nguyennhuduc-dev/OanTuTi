@@ -1,4 +1,3 @@
-/* Khởi tạo cấu hình cơ bản */
 * {
     margin: 0;
     padding: 0;
@@ -11,213 +10,273 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Nền Prime Dark sâu thẳm phối màu không gian tối */
-    background: radial-gradient(circle at center, #110c22 0%, #060409 100%);
+    background: #05020a;
     color: #ffffff;
-    overflow: hidden;
+    overflow-x: hidden;
+    position: relative;
 }
 
-/* Hộp chứa Prime Container kính mờ với viền LED chạy xanh */
+/* Khớp Canvas nền hạt chạy ngầm toàn màn hình */
+#particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
 .game-container {
     position: relative;
-    background: rgba(10, 6, 20, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 2px solid #3b82f6;
-    border-radius: 20px;
-    padding: 40px;
-    width: 90%;
-    max-width: 520px;
+    z-index: 1;
+    background: rgba(12, 8, 28, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(59, 130, 246, 0.4);
+    border-radius: 24px;
+    padding: 35px;
+    width: 95%;
+    max-width: 500px;
     text-align: center;
-    /* Đổ bóng Neon lan tỏa ra ngoài */
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.25), inset 0 0 15px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.15), inset 0 0 20px rgba(59, 130, 246, 0.1);
 }
 
-/* Tiêu đề Chữ Prime Đổ Bóng Nhất Nháy */
+.tournament-badge {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    background: linear-gradient(90deg, #ff007f, #7928ca);
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+}
+
 h1 {
     font-family: 'Orbitron', sans-serif;
-    font-size: 2.8rem;
+    font-size: 2.6rem;
     font-weight: 900;
-    letter-spacing: 4px;
-    margin-bottom: 30px;
-    color: #fff;
-    text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff, 0 0 40px #00f3ff;
-    animation: neonPulse 2s infinite alternate;
+    letter-spacing: 6px;
+    margin-bottom: 25px;
+    background: linear-gradient(to right, #00f3ff, #d946ef);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
 }
 
-@keyframes neonPulse {
-    0% { text-shadow: 0 0 8px #00f3ff, 0 0 15px #00f3ff; opacity: 0.95; }
-    100% { text-shadow: 0 0 15px #00f3ff, 0 0 30px #00f3ff, 0 0 50px #d946ef; opacity: 1; }
-}
-
-/* Bảng điểm Esport Premium */
 .score-board {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.07) 100%);
-    padding: 15px 20px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-    border-bottom: 3px solid #d946ef;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-}
-
-.score-card {
-    display: flex;
-    flex-direction: column;
-}
-
-.score-label {
-    font-size: 1rem;
-    text-transform: uppercase;
-    color: #94a3b8;
-    letter-spacing: 2px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px 20px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .score-number {
     font-family: 'Orbitron', sans-serif;
-    font-size: 3rem;
+    font-size: 2.8rem;
     font-weight: 700;
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .vs-badge {
     font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
+    font-weight: 700;
     color: #00f3ff;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     letter-spacing: 1px;
+    background: rgba(0, 243, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
 }
 
-/* Sàn Đấu Công Nghệ Hologram */
 .battle-ground {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     gap: 15px;
 }
 
 .choice-display {
     flex: 1;
-    background: rgba(255, 255, 255, 0.03);
-    padding: 20px 10px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.choice-display.winner-flash {
+    border-color: #10b981;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
 }
 
 .choice-display p {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .status-emoji {
-    font-size: 4rem;
-    margin-top: 10px;
-    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.3));
-    transition: transform 0.2s ease;
+    font-size: 3.5rem;
+    margin-top: 5px;
 }
 
-/* Hộp Thông Báo Trạng Thái Kết Quả */
 .result-message {
-    height: 50px;
-    margin-bottom: 30px;
+    height: 45px;
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 #game-status {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 700;
     letter-spacing: 1px;
-    color: #00f3ff;
-    text-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
-    text-transform: uppercase;
+    color: #e2e8f0;
 }
 
-/* Bộ Các Nút Bấm Lựa Chọn Hiệu Ứng Prime - LED Viền */
 .action-buttons {
     display: flex;
     justify-content: space-between;
-    gap: 15px;
-    margin-bottom: 30px;
+    gap: 12px;
+    margin-bottom: 25px;
 }
 
 .btn {
     flex: 1;
-    background: #130f26;
-    border: none;
+    background: #110924;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
-    padding: 20px 10px;
-    font-size: 1.1rem;
+    padding: 15px 5px;
+    font-size: 1rem;
     font-weight: 700;
-    letter-spacing: 1px;
     border-radius: 12px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
+    gap: 5px;
+    transition: all 0.2s ease;
 }
 
-/* Đổ màu viền neon riêng biệt đặc trưng cho từng nút */
-#rock { border: 1px solid #ff4655; box-shadow: inset 0 0 10px rgba(255, 70, 85, 0.2); }
-#paper { border: 1px solid #00f3ff; box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.2); }
-#scissors { border: 1px solid #ffb800; box-shadow: inset 0 0 10px rgba(255, 184, 0, 0.2); }
+#rock:hover { border-color: #ff4655; box-shadow: 0 0 15px rgba(255, 70, 85, 0.4); background: #ff4655; color: #000; }
+#paper:hover { border-color: #00f3ff; box-shadow: 0 0 15px rgba(0, 243, 255, 0.4); background: #00f3ff; color: #000; }
+#scissors:hover { border-color: #ffb800; box-shadow: 0 0 15px rgba(255, 184, 0, 0.4); background: #ffb800; color: #000; }
 
-.btn-emoji {
-    font-size: 2.2rem;
-    transition: transform 0.3s ease;
+.btn:active { transform: scale(0.95); }
+
+/* Thành phần Nhật ký Lịch sử Chuyên nghiệp */
+.history-container {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 25px;
+    text-align: left;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Hiệu ứng Rê chuột qua nút bấm - Phát sáng bùng nổ màu */
-#rock:hover { background: #ff4655; box-shadow: 0 0 25px #ff4655; color: #000; font-weight: 900; }
-#paper:hover { background: #00f3ff; box-shadow: 0 0 25px #00f3ff; color: #000; font-weight: 900; }
-#scissors:hover { background: #ffb800; box-shadow: 0 0 25px #ffb800; color: #000; font-weight: 900; }
-
-.btn:hover .btn-emoji {
-    transform: scale(1.2) rotate(-5deg);
+.history-container h3 {
+    font-size: 0.8rem;
+    color: #4b5563;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 4px;
 }
 
-.btn:active {
-    transform: scale(0.95);
+#history-log {
+    list-style: none;
+    max-height: 110px;
+    overflow-y: auto;
 }
 
-/* Nút Khởi Động Lại Hệ Thống */
-.reset-button {
-    font-family: 'Orbitron', sans-serif;
-    background: transparent;
-    border: 1px solid #64748b;
-    color: #64748b;
-    padding: 12px 24px;
+#history-log li {
     font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    border-radius: 8px;
+    padding: 4px 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed rgba(255,255,255,0.02);
+}
+
+.log-win { color: #10b981; }
+.log-lose { color: #ef4444; }
+.log-draw { color: #94a3b8; }
+.empty-log { color: #4b5563; text-align: center; font-style: italic; }
+
+.reset-button {
+    background: transparent;
+    border: 1px solid #374151;
+    color: #9ca3af;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    border-radius: 6px;
     cursor: pointer;
     text-transform: uppercase;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
-.reset-button:hover {
-    border-color: #fff;
+.reset-button:hover { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.05); }
+
+/* Màn hình Modal Kết Thúc Trận Đấu Toàn Cảnh */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(3, 1, 7, 0.9);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show { display: flex; opacity: 1; }
+
+.modal-content {
+    background: #0d091f;
+    border: 2px solid #d946ef;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 0 30px #d946ef;
+}
+
+#modal-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+#modal-summary { font-size: 1.2rem; color: #94a3b8; margin-bottom: 30px; }
+
+.modal-btn {
+    font-family: 'Orbitron', sans-serif;
+    background: #d946ef;
     color: #fff;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    padding: 12px 30px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #d946ef;
 }
 
-/* Hoạt ảnh Siêu Cấp Giật Điện Prime khi xử lý kết quả */
-.prime-shockwave {
-    animation: shockwave 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
-@keyframes shockwave {
-    0% { transform: scale(1); filter: brightness(1); }
-    50% { transform: scale(1.04); filter: brightness(1.4); box-shadow: 0 0 40px rgba(56, 189, 248, 0.6); }
-    100% { transform: scale(1); filter: brightness(1); }
+/* Hiệu ứng Rung sàn đấu khi xử lý kết quả */
+.screen-shake { animation: shake 0.3s ease; }
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
 }
